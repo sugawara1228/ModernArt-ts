@@ -5,7 +5,7 @@ import { Text, Spinner, } from '@chakra-ui/react';
 const Loading = () => {
 
   return (
-    <Text as="b" opacity="0.9">
+    <Text as="b" opacity="0.9" color="white">
         <Spinner mr="2" /> サーバーからデータを取得中...
     </Text>
   );

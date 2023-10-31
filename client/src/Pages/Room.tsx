@@ -18,13 +18,14 @@ import {
   useClipboard,
 } from '@chakra-ui/react';
 import Gbox from '../Components/GlassBox';
+import { Socket } from 'socket.io-client';
 import { SocketContext } from '../index';
 import { useNavigate } from 'react-router-dom';
 import { userNameValidation } from '../utility/validation';
 import { RoomObj, UserObj } from '../types/types'
 
 const Room: React.FC = () => {
-  const socket = useContext(SocketContext);
+  const socket: Socket = useContext(SocketContext);
   const [message, setMessage] = useState<string>('');
   const [userName, setUserName] = useState<string>('');
   const [nameError, setNameError] = useState<string>('');
@@ -35,13 +36,14 @@ const Room: React.FC = () => {
   const addModal = useDisclosure();
   const leaveModal = useDisclosure();
   const cancelRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const { onCopy, value, setValue, hasCopied } = useClipboard("");
   const navigate = useNavigate();
   const blockBrowserBack = useCallback(() => {
     window.history.go(1)
   }, [])
   
-  const addPath = window.location.href;
+  const addPath: string = window.location.href;
   
     useEffect(() => {
         // サーバーからのメッセージ受信通知
@@ -80,11 +82,14 @@ const Room: React.FC = () => {
         return () => {
             window.removeEventListener('popstate', blockBrowserBack)
         }
-    }, [blockBrowserBack])
+    }, [blockBrowserBack]);
     
     const sendMessage = () => {
         socket.emit('sendMessage', message);
         setMessage('');
+        if (inputRef.current) {
+            inputRef.current.value = '';
+        }
     };
 
     const joinRoom = () => {
@@ -197,6 +202,7 @@ const Room: React.FC = () => {
                         <Box position="relative">
                             <Input
                             onChange={e => setMessage(e.target.value)}
+                            ref={inputRef}
                             w="75%"
                             mt="5"
                             mb="35"

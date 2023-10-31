@@ -1,7 +1,7 @@
 import { Rooms, Users, UserObj } from './types/types'
 import express from "express";
 import http from "http";
-import { Server } from "socket.io";
+import { Server, Socket } from "socket.io";
 
 const app = express();
 const server = http.createServer(app);
@@ -13,10 +13,10 @@ const io = new Server(server, {
 });
 
 const rooms: Rooms = {};
-const users: UserObj[] = [];
+const users: Users = [];
 
 // クライアントからの接続イベントをリッスン
-io.on("connection", (socket) => {
+io.on("connection", (socket: Socket) => {
   console.log(`クライアントが接続しました。socket.id:"${socket.id}"`);
 
   /** ルーム作成処理 */
@@ -123,7 +123,7 @@ io.on("connection", (socket) => {
  * ルーム退出処理  
  * socket.idを受け取り、該当ユーザを退出させデータから削除する
  */
-const leaveRoom = (socket: any) => {
+const leaveRoom = (socket: Socket) => {
   const user: UserObj | undefined = users.find(user => user.userId === socket.id);
   if (user) {
     rooms[user.roomId].users = rooms[user.roomId].users.filter(user => user !== socket.id);

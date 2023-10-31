@@ -10,6 +10,7 @@ import {
   Spinner,
 } from '@chakra-ui/react';
 import Gbox from '../Components/GlassBox';
+import { Socket } from 'socket.io-client';
 import { useNavigate } from 'react-router-dom';
 import { SocketContext } from '../index';
 import { userNameValidation } from '../utility/validation';
@@ -17,7 +18,7 @@ import Loading from '../Components/Loading';
 
 
 const CreateRoom: React.FC = () => {
-  const socket = useContext(SocketContext);
+  const socket: Socket = useContext(SocketContext);
   const [userName, setUserName] = useState<string>('');
   const [nameError, setNameError] = useState<string>('');
   const navigate = useNavigate();
@@ -25,8 +26,8 @@ const CreateRoom: React.FC = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      setIsLoading(false); // ローディング完了
-    }, 700); // 2秒後にローディング完了と仮定
+      setIsLoading(false);
+    }, 700);
   }, []);
 
   const createRoom = () => {
@@ -41,7 +42,7 @@ const CreateRoom: React.FC = () => {
       socket.emit('createRoom', roomId, userName);
 
       // メイン画面に移動
-      navigate('/room/' + roomId);
+      navigate(`/room/${roomId}`);
     }
     
   };
