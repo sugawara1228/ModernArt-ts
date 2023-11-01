@@ -23,6 +23,11 @@ import { SocketContext } from '../index';
 import { useNavigate } from 'react-router-dom';
 import { userNameValidation } from '../utility/validation';
 import { RoomObj, UserObj } from '../types/types'
+import Loading from '../Components/Loading';
+import MainBtn from '../Components/MainBtn';
+import HeaderContent from '../Components/HeaderContet';
+import ChatArea from '../Components/ChatArea';
+import SellingPrice from '../Components/SellingPrice';
 
 const Room: React.FC = () => {
   const socket: Socket = useContext(SocketContext);
@@ -33,15 +38,12 @@ const Room: React.FC = () => {
   const [messageList, setMessageList] = useState<string[]>([]);
   const [joinedUsers, setJoinedUsers] = useState<number>(0);
   const [joinFlg, setJoinFlg] = useState<boolean>(false);
-  const addModal = useDisclosure();
-  const leaveModal = useDisclosure();
-  const cancelRef = useRef(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const { onCopy, value, setValue, hasCopied } = useClipboard("");
   const navigate = useNavigate();
   const blockBrowserBack = useCallback(() => {
     window.history.go(1)
-  }, [])
+  }, []);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   
   const addPath: string = window.location.href;
   
@@ -58,6 +60,9 @@ const Room: React.FC = () => {
             setMessageList((prevMessageList) => [...prevMessageList, user.name + 'が入室しました。']);
             setJoinedUsers(room.users.length);
             setJoinFlg(true);
+            setTimeout(() => {
+                setIsLoading(false);
+            }, 700);
         });
 
         // サーバーからのルーム退出通知
@@ -66,8 +71,6 @@ const Room: React.FC = () => {
             setJoinedUsers(room.users.length);
         });
 
-        setValue(addPath);
-        
     },[]);
 
     /** ブラウザバックの禁止 */
@@ -117,115 +120,23 @@ const Room: React.FC = () => {
         <>
         { joinFlg ? (
         
-        <Box>
-            <Flex height="10%" justify="space-between" align="center" p="10">
-                <Button onClick={addModal.onOpen} colorScheme='yellow' borderRadius="30px" w="12rem"
-                size="lg">
-                    招待
-                    <span className="material-symbols-outlined">
-                        person
-                    </span>
-                    {joinedUsers}
-                </Button>
-            
-            <AlertDialog
-                isOpen={addModal.isOpen}
-                leastDestructiveRef={cancelRef}
-                onClose={addModal.onClose}
-            >
-                <AlertDialogOverlay>
-                <AlertDialogContent>
-                    <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-                    ユーザーを招待
-                    </AlertDialogHeader>
-
-                    <AlertDialogBody>
-                        このリンクを送信して、プレイヤーを招待できます。<br />
-                        <Input
-                        value={value}
-                        isReadOnly 
-                        w="80%" 
-                        />
-                    </AlertDialogBody>
-
-                    <AlertDialogFooter>
-                    <Button ref={cancelRef} onClick={addModal.onClose}>
-                        閉じる
-                    </Button>
-                    <Button colorScheme='yellow' onClick={onCopy} ml={3}>
-                        {hasCopied ? "コピーしました!" : "Copy"}
-                    </Button>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-                </AlertDialogOverlay>
-            </AlertDialog>
-            <Button onClick={leaveModal.onOpen} colorScheme='yellow' borderRadius="30px" w="10rem"
-                size="lg">
-                    ルーム退出
-            </Button>
-            <AlertDialog
-                isOpen={leaveModal.isOpen}
-                leastDestructiveRef={cancelRef}
-                onClose={leaveModal.onClose}
-            >
-                <AlertDialogOverlay>
-                <AlertDialogContent>
-                    <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-                    ルームの退出
-                    </AlertDialogHeader>
-
-                    <AlertDialogBody>
-                        ルームを退出しますか？
-                    </AlertDialogBody>
-
-                    <AlertDialogFooter>
-                    <Button ref={cancelRef} onClick={leaveModal.onClose}>
-                        キャンセル
-                    </Button>
-                    <Button onClick={leaveRoom} colorScheme='red'  ml={3}>
-                        退出
-                    </Button>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-                </AlertDialogOverlay>
-            </AlertDialog>
+        <Box w="100vw" h="100vh" bg="rgba(66, 68, 86, 0.1)" backdropFilter="blur(12px)">
+            { isLoading ? <Loading /> : (
+            <>
+            <HeaderContent joinedUsers={joinedUsers} leaveRoom={leaveRoom} addPath={addPath}/>
+            <Flex height="90vh" justifyContent="center" alignItems="center" py="5" px="10">
+                <Flex h="100%" w="20%" justifyContent="center" alignItems="center" flexDirection="column">
+                    <SellingPrice />
+                    <ChatArea 
+                    roomId={roomId} 
+                    messageList={messageList} 
+                    sendMessage={sendMessage} 
+                    setMessage={setMessage} 
+                    inputRef={inputRef}
+                    />
+                </Flex>
             </Flex>
-            <Flex height="80vh" justifyContent="end" alignItems="center" py="50" px="10">
-                <Gbox w="20%" h="100%" justifyContent="flex-start">
-                    <Text>ルームID:{roomId}</Text>
-                    <Text>
-                        {messageList.map((messageContent, index) => {
-                            return <Text key={index}> {messageContent}</Text>;
-                        })}
-                    </Text>
-                    <Box position="absolute" bottom="10" w="100%">
-                        <Box position="relative">
-                            <Input
-                            onChange={e => setMessage(e.target.value)}
-                            ref={inputRef}
-                            w="75%"
-                            mt="5"
-                            mb="35"
-                            border="none"
-                            bg="rgba(255, 255, 255, 0.2)"
-                            z-index="100"
-                            />
-                            <Button
-                            onClick={sendMessage}
-                            position="absolute"
-                            right="10%"
-                            top="38%"
-                            transform="translateY(-38%)"
-                            bg="none"
-                            
-                            _hover={{ bg: 'none' }}
-                            >
-                            <span className="material-symbols-outlined green">send</span>
-                            </Button>
-                        </Box>
-                    </Box>
-                </Gbox>
-            </Flex>
+            </>)}
         </Box>
         ) : (
         <Flex

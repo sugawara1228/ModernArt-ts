@@ -1,2 +1,31 @@
-.material-symbols-outlined.green { color: #18a74c; }
-.material-symbols-outlined.md-18 { font-size: 18px; }
+.material-symbols-outlined.green { 
+    color: #18a74c; 
+}
+.material-symbols-outlined.md-18 { 
+    font-size: 18px; 
+}
+
+
+.chat {
+    --sb-track-color: rgba(255, 255, 255, 0.3);
+    --sb-thumb-color: #313549;
+    --sb-size: 5px;
+  
+    scrollbar-color: var(--sb-thumb-color) 
+                     var(--sb-track-color);
+  }
+  
+  .chat::-webkit-scrollbar {
+    width: var(--sb-size) 
+  }
+  
+  .chat::-webkit-scrollbar-track {
+    background: var(--sb-track-color);
+    border-radius: 10px;
+  }
+  
+  .chat::-webkit-scrollbar-thumb {
+    background: var(--sb-thumb-color);
+    border-radius: 10px;
+    
+    }

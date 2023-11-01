@@ -1,27 +1,42 @@
-import React from 'react';
-import { Flex, Button, Heading, Text, Center, } from '@chakra-ui/react';
+import React, { useState, useEffect, } from 'react';
+import { Flex, Box, Heading, Text, Center, Image } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
+import MainBtn from '../Components/MainBtn';
+import Loading from '../Components/Loading';
+
 
 const Top: React.FC = () => {
 
+const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 700);
+  }, []);
+
   return (
-<Flex
-   height="100vh" // 画面の高さいっぱいにする
-   justifyContent="center" // 水平中央に配置
-   alignItems="center" // 垂直中央に配置
-   flexDirection="column" // 子要素を縦に配置
->
-   <Heading as="h1" size="3xl" mb="10">
-     ModernArt<br />
-     <Center>
-      <Text fontSize="3xl" color="blue.900">ONLINE</Text>
-     </Center>
-   </Heading>
-   <Link to="/CreateRoom">
-      <Button w="22rem" colorScheme="yellow" size="lg">ルームの作成</Button>
-   </Link>
-   
- </Flex>
+    <Flex
+        height="100vh" // 画面の高さいっぱいにする
+        justifyContent="center" // 水平中央に配置
+        alignItems="center" // 垂直中央に配置
+        flexDirection="column" // 子要素を縦に配置
+        >
+      {isLoading? <Loading /> : (
+        <>
+        <Heading as="h1" size="3xl" mb="10">
+          <Center>
+            <Image src="/img/logo.png" w="600px"/>
+          </Center>
+        </Heading>
+        <Link to="/CreateRoom">
+          <MainBtn w="22rem">始める</MainBtn>
+        </Link>
+        </>
+        
+      )}
+    </Flex>
+
   );
 }
 

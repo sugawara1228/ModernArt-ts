@@ -15,6 +15,8 @@ import { useNavigate } from 'react-router-dom';
 import { SocketContext } from '../index';
 import { userNameValidation } from '../utility/validation';
 import Loading from '../Components/Loading';
+import MainBtn from '../Components/MainBtn';
+import { mainColor, subColor } from '../constants/cssConstants';
 
 
 const CreateRoom: React.FC = () => {
@@ -62,14 +64,19 @@ const CreateRoom: React.FC = () => {
     >
       {isLoading? <Loading />:
       <Gbox>
-        <Text as="b">名前を入力して、ルームを作成してください</Text>
+        <Text as="b" color={subColor} fontSize="27px" position="absolute" top="4rem">ルームの作成</Text>
+        <Text color={subColor}>名前を入力して、ルームを作成してください。</Text>
+        <Text color={subColor} mt="1">その後、招待URLからメンバーを招待できます。</Text>
         <Input
           onChange={e => setUserName(e.target.value)}
           placeholder="ニックネーム"
           w="22rem"
           mt="5"
+          bg="rgba(255, 255, 255, 0.9)"
+          borderRadius="30px"
+          h="2.8rem"
         />
-        <Text color="red" textAlign="left" w="22rem" mt="1" fontSize="sm">  
+        <Text color="red.500" textAlign="left" w="22rem" mt="1" fontSize="sm">  
             {nameError && 
             <Text mt="1">
                 <span className="material-symbols-outlined md-18">
@@ -82,16 +89,9 @@ const CreateRoom: React.FC = () => {
             </Text>
             }
         </Text>
-        <Button
-          onClick={createRoom}
-          colorScheme="yellow"
-          w="22rem"
-          size="lg"
-          border="none"
-          mt="35"
-        >
+        <MainBtn onClick={createRoom} >
           ルームを作成
-        </Button>
+        </MainBtn>
       </Gbox>
       }
     </Flex>

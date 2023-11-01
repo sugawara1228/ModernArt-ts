@@ -28,6 +28,13 @@
   color: #61dafb;
 }
 
+.material-symbols-outlined.green { 
+  color: #18a74c; 
+}
+.material-symbols-outlined.md-18 { 
+  font-size: 18px; 
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
