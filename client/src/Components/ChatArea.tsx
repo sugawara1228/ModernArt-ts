@@ -10,7 +10,7 @@ import { mainColor, subColor } from '../constants/cssConstants';
 import Gbox from './GlassBox';
 
 /** チャットエリアコンポーネント */
-const HeaderContent:React.FC<ChatAreaProps> = ( props ) => {
+const ChatArea:React.FC<ChatAreaProps> = ( props ) => {
     const { roomId, messageList, sendMessage, setMessage, inputRef } = props;
 
   return (
@@ -51,4 +51,4 @@ const HeaderContent:React.FC<ChatAreaProps> = ( props ) => {
   );
 }
 
-export default HeaderContent;
+export default ChatArea;

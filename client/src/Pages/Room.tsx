@@ -7,15 +7,6 @@ import {
   Center,
   Input,
   Box,
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogContent,
-  AlertDialogOverlay,
-  AlertDialogCloseButton,
-  useDisclosure,
-  useClipboard,
 } from '@chakra-ui/react';
 import Gbox from '../Components/GlassBox';
 import { Socket } from 'socket.io-client';
@@ -28,14 +19,18 @@ import MainBtn from '../Components/MainBtn';
 import HeaderContent from '../Components/HeaderContet';
 import ChatArea from '../Components/ChatArea';
 import SellingPrice from '../Components/SellingPrice';
+import UserInfo from '../Components/UserInfo';
+import { subColor } from '../constants/cssConstants';
 
 const Room: React.FC = () => {
   const socket: Socket = useContext(SocketContext);
   const [message, setMessage] = useState<string>('');
+  const [userId, setUserId] = useState<string>('');
   const [userName, setUserName] = useState<string>('');
   const [nameError, setNameError] = useState<string>('');
   const [roomId, setRoomId] = useState<string>('');
   const [messageList, setMessageList] = useState<string[]>([]);
+  const [users, setUsers ] = useState<UserObj[]>([]);
   const [joinedUsers, setJoinedUsers] = useState<number>(0);
   const [joinFlg, setJoinFlg] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -56,13 +51,15 @@ const Room: React.FC = () => {
         // サーバーからのルーム入室通知
         socket.on('roomJoined', (room: RoomObj, user: UserObj) => {
             setRoomId(user.roomId);
+            setUserId(user.userId);
             setUserName(user.name);
+            setUsers(room.users);
             setMessageList((prevMessageList) => [...prevMessageList, user.name + 'が入室しました。']);
             setJoinedUsers(room.users.length);
             setJoinFlg(true);
             setTimeout(() => {
                 setIsLoading(false);
-            }, 700);
+            }, 900);
         });
 
         // サーバーからのルーム退出通知
@@ -123,20 +120,26 @@ const Room: React.FC = () => {
         <Box w="100vw" h="100vh" bg="rgba(66, 68, 86, 0.1)" backdropFilter="blur(12px)">
             { isLoading ? <Loading /> : (
             <>
-            <HeaderContent joinedUsers={joinedUsers} leaveRoom={leaveRoom} addPath={addPath}/>
-            <Flex height="90vh" justifyContent="center" alignItems="center" py="5" px="10">
-                <Flex h="100%" w="20%" justifyContent="center" alignItems="center" flexDirection="column">
-                    <SellingPrice />
-                    <ChatArea 
-                    roomId={roomId} 
-                    messageList={messageList} 
-                    sendMessage={sendMessage} 
-                    setMessage={setMessage} 
-                    inputRef={inputRef}
-                    />
+                <HeaderContent joinedUsers={joinedUsers} leaveRoom={leaveRoom} addPath={addPath}/>
+                
+                <Text color={subColor}>{JSON.stringify(users)}</Text>
+                <Flex height="90vh" justifyContent="center" alignItems="center" py="5" px="10">
+                    <Flex h="100%" w="20%" justifyContent="center" alignItems="center" flexDirection="column">
+                        <UserInfo users={users}/>
+                    </Flex>
+                    <Flex h="100%" w="20%" justifyContent="center" alignItems="center" flexDirection="column">
+                        <SellingPrice />
+                        <ChatArea 
+                        roomId={roomId} 
+                        messageList={messageList} 
+                        sendMessage={sendMessage} 
+                        setMessage={setMessage} 
+                        inputRef={inputRef}
+                        />
+                    </Flex>
                 </Flex>
-            </Flex>
-            </>)}
+            </>
+            )}
         </Box>
         ) : (
         <Flex

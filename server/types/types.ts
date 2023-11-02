@@ -3,11 +3,13 @@ export type Rooms = {
 }
 
 export type RoomObj = {
-    users: string[];
+    users: UserObj[];
     turnIndex: number;
 }
 
-export type Users = UserObj[];
+export type Users = {
+    [key: string]: UserObj;
+};
 
 export type UserObj = {
     userId: string;

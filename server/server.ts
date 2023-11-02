@@ -13,7 +13,7 @@ const io = new Server(server, {
 });
 
 const rooms: Rooms = {};
-const users: Users = [];
+const users: Users = {};
 
 // クライアントからの接続イベントをリッスン
 io.on("connection", (socket: Socket) => {
@@ -23,7 +23,7 @@ io.on("connection", (socket: Socket) => {
   socket.on("createRoom", (roomId: string, userName: string) => {
 
     // 以前のルーム作成・入室したときのデータを探す
-    const oldUserData: UserObj | undefined = users.find(user => user.userId === socket.id);
+    const oldUserData: UserObj | undefined = users[socket.id];
 
     // もし前のデータがあった場合、先にデータ削除＆ルーム退出処理を行う
     if(oldUserData) {
@@ -33,24 +33,25 @@ io.on("connection", (socket: Socket) => {
     }
 
     // ユーザー情報
-    const user: UserObj = {
+    users[socket.id] = {
       userId: socket.id,
       roomId: roomId,
       name: userName
     }
-    users.push(user);
 
     // ルーム情報
     rooms[roomId] = {
-      users: [socket.id],
+      users: [users[socket.id]],
       turnIndex: 0
     };
+
+    console.log(rooms[roomId].users);
 
     // ルームを作成
     socket.join(roomId);
 
     // クライアントにルーム作成完了を通知
-    socket.emit("roomJoined", rooms[roomId], user);
+    socket.emit("roomJoined", rooms[roomId], users[socket.id]);
     console.log(`socket.id:"${socket.id}"のユーザー "${userName}" がルーム "${roomId}" を作成しました`);
   });
 
@@ -58,7 +59,7 @@ io.on("connection", (socket: Socket) => {
   socket.on("joinRoom", (roomId: string, userName: string) => {
 
     // 以前作成・入室したルームが残っている場合は先に削除する
-    const oldUserData: UserObj | undefined = users.find(user => user.userId === socket.id);
+    const oldUserData: UserObj | undefined = users[socket.id];
     if(oldUserData) {
       console.log(`socket.id: "${socket.id}のユーザーの以前のデータが残っています。`);
       console.log('以前のデータの削除、退出処理を実行します');
@@ -66,23 +67,22 @@ io.on("connection", (socket: Socket) => {
     }
 
     // ユーザー情報追加
-    const user: UserObj = {
+    users[socket.id] = {
       userId: socket.id,
       roomId: roomId,
       name: userName
     }
-    users.push(user);
 
     // ルーム情報追加
     if(rooms[roomId]) {
-      rooms[roomId].users.push(socket.id);
+      rooms[roomId].users.push(users[socket.id]);
     };
 
     //ルームに入室
     socket.join(roomId);
 
     // クライアントにルーム作成完了を通知
-    io.to(roomId).emit("roomJoined", rooms[roomId], user);
+    io.to(roomId).emit("roomJoined", rooms[roomId], users[socket.id]);
     console.log(`socket.id:"${socket.id}"のユーザー "${userName}" がルーム "${roomId}" に入室しました`);
   });
 
@@ -90,7 +90,7 @@ io.on("connection", (socket: Socket) => {
   socket.on("sendMessage", (message: string) => {
 
     // メッセージの送信元のsocket.idから、ユーザー情報を取得
-    const user: UserObj | undefined = users.find(user => user.userId === socket.id);
+    const user: UserObj | undefined = users[socket.id];
 
     if(user) {
         // ユーザ情報から、今いるルームidと名前を取得
@@ -124,10 +124,10 @@ io.on("connection", (socket: Socket) => {
  * socket.idを受け取り、該当ユーザを退出させデータから削除する
  */
 const leaveRoom = (socket: Socket) => {
-  const user: UserObj | undefined = users.find(user => user.userId === socket.id);
+  const user: UserObj | undefined = users[socket.id];
   if (user) {
-    rooms[user.roomId].users = rooms[user.roomId].users.filter(user => user !== socket.id);
-    users.splice(users.findIndex(user => user.userId === socket.id), 1);
+    rooms[user.roomId].users = rooms[user.roomId].users.filter(user => user.userId !== socket.id);
+    delete users[socket.id];
 
     io.to(user.roomId).emit("leaveRoom", rooms[user.roomId], user);
 
