@@ -127,7 +127,7 @@ const Room: React.FC = () => {
             <Flex height="90vh" justifyContent="center" alignItems="center" py="5" px="10">
                 <Flex h="100%" w="20%" justifyContent="center" alignItems="center" flexDirection="column">
                     <SellingPrice />
-                    <ChatArea 
+                    <ChatArea
                     roomId={roomId} 
                     messageList={messageList} 
                     sendMessage={sendMessage} 
@@ -163,7 +163,6 @@ const Room: React.FC = () => {
                         <Box as="span" verticalAlign="top" ml="1">
                         {nameError}
                         </Box>
-                        
                     </Text>
                     }
                 </Text>
