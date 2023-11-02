@@ -3,13 +3,13 @@ import {
     Button,
     Text,
     Input,
-    Box,
+    Flex,
+    Box
 } from '@chakra-ui/react';
 import { Socket } from 'socket.io-client';
 import { SocketContext } from '../index';
 import { UserInfoProps } from "../types/types";
-import { mainColor, subColor } from '../constants/cssConstants';
-import Gbox from './GlassBox';
+import { mainColor, subColor, color_d, color_g, color_m, color_p, color_v } from '../constants/cssConstants';
 
 
 /** ユーザー情報エリア　コンポーネント */
@@ -21,9 +21,35 @@ const UserInfo:React.FC<UserInfoProps> = ( props ) => {
         <>
         {users.map((user, index) => (
             user.userId === socket.id ? null : (
-                <Gbox w="100%" h="20%" justifyContent="flex-start">
-                    <Text key={user.userId} color={subColor}>{user.name}</Text>
-                </Gbox>
+                <Flex w="70%" h="25%" bg={mainColor} borderRadius="8px" mb="2rem" color={subColor} justify="center" align="center">
+                    <Flex w="90%" h="90%" border="1px solid" flexDirection="column" align="center">
+                        <Text as="b" key={user.userId} color={subColor} border="1px solid #FFDCAD" py=".3rem" px=".5rem" mt="1rem" borderRadius="4px">
+                            {user.name}
+                        </Text>
+                        <Flex justify="center" align="center" mt="1rem">
+                            <Box as="span" display="inline-block" w="2.5rem" h="2.5rem" bg={color_g} borderRadius="3px" mr="0.5rem">
+
+                            </Box>
+                            <Box as="span" display="inline-block" w="2.5rem" h="2.5rem" bg={color_p} borderRadius="3px" mr="0.5rem">
+
+                            </Box>
+                            <Box as="span" display="inline-block" w="2.5rem" h="2.5rem" bg={color_m} borderRadius="3px" mr="0.5rem">
+
+                            </Box>
+                        </Flex>
+                        <Flex justify="center" align="center" mt="1rem">
+                            <Box as="span" display="inline-block" w="2.5rem" h="2.5rem" bg={color_v} borderRadius="3px" mr="0.5rem">
+
+                            </Box>
+                            <Box as="span" display="inline-block" w="2.5rem" h="2.5rem" bg={color_d} borderRadius="3px" mr="0.5rem">
+
+                            </Box>
+                            <Box as="span" display="inline-block" w="2.5rem" h="2.5rem" bg="gray" borderRadius="3px" mr="0.5rem">
+
+                            </Box>
+                        </Flex>
+                    </Flex>
+                </Flex>
             )
         ))}
         </>
