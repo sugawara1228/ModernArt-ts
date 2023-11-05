@@ -32,13 +32,15 @@ const HeaderContent:React.FC<HeaderProps> = ( props ) => {
 
   return (
     <Flex height="10%" justify="space-between" align="center" p="10">
-                <Button onClick={addModal.onOpen} colorScheme='yellow' borderRadius="30px" w="12rem"
+                <Button onClick={addModal.onOpen} bg="rgba(255, 255, 255, 0.95)" borderRadius="30px" w="12rem"
                 size="lg">
+                    <Text as="span" color={mainColor}>
                     招待
-                    <span className="material-symbols-outlined">
+                    <Text as="span" className="material-symbols-outlined" verticalAlign="bottom">
                         person
-                    </span>
+                    </Text>
                     {joinedUsers}
+                    </Text>
                 </Button>
             
             <AlertDialog
@@ -72,8 +74,8 @@ const HeaderContent:React.FC<HeaderProps> = ( props ) => {
                 </AlertDialogContent>
                 </AlertDialogOverlay>
             </AlertDialog>
-            <Button onClick={leaveModal.onOpen} colorScheme='yellow' borderRadius="30px" w="10rem"
-                size="lg">
+            <Button onClick={leaveModal.onOpen} bg="rgba(255, 255, 255, 0.95)" borderRadius="30px" w="10rem"
+                size="lg" color={mainColor}>
                     ルーム退出
             </Button>
             <AlertDialog

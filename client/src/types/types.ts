@@ -40,11 +40,20 @@ export type HeaderProps = {
 export type ChatAreaProps = {
     roomId: string;
     messageList: string[];
-    sendMessage: () => void;
+    sendMessage: (event: React.FormEvent<HTMLFormElement>) => void;
     setMessage: React.Dispatch<React.SetStateAction<string>>;
     inputRef: React.MutableRefObject<HTMLInputElement | null>;
+    chatAreaRef: React.MutableRefObject<HTMLInputElement | null>;
 }
 
 export type UserInfoProps = {
     users: UserObj[];
+}
+
+export type JoinRoomProps = {
+    createFlg: boolean;
+    nameError : string;
+    createRoom?: () => void;
+    joinRoom?: () => void;
+    setUserName: (e: string) => void;
 }

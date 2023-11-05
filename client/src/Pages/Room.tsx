@@ -21,6 +21,7 @@ import ChatArea from '../Components/ChatArea';
 import SellingPrice from '../Components/SellingPrice';
 import UserInfo from '../Components/UserInfo';
 import { subColor } from '../constants/cssConstants';
+import JoinRoom from '../Components/JoinRoom';
 
 const Room: React.FC = () => {
   const socket: Socket = useContext(SocketContext);
@@ -34,6 +35,7 @@ const Room: React.FC = () => {
   const [joinedUsers, setJoinedUsers] = useState<number>(0);
   const [joinFlg, setJoinFlg] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const chatAreaRef = useRef<HTMLInputElement | null>(null);
   const navigate = useNavigate();
   const blockBrowserBack = useCallback(() => {
     window.history.go(1)
@@ -46,6 +48,9 @@ const Room: React.FC = () => {
         // サーバーからのメッセージ受信通知
         socket.on('messageReceived', (sendName: string, message: string) => {
             setMessageList((prevMessageList) => [...prevMessageList, sendName + ': ' + message]);
+            if (chatAreaRef.current) {
+                chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
+            }
         });
 
         // サーバーからのルーム入室通知
@@ -65,6 +70,7 @@ const Room: React.FC = () => {
         // サーバーからのルーム退出通知
         socket.on('leaveRoom', (room: RoomObj, user: UserObj) => {
             setMessageList((prevMessageList) => [...prevMessageList, user.name + 'が退出しました。']);
+            setUsers(room.users);
             setJoinedUsers(room.users.length);
         });
 
@@ -84,7 +90,9 @@ const Room: React.FC = () => {
         }
     }, [blockBrowserBack]);
     
-    const sendMessage = () => {
+    const sendMessage = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        if(!message) return;
         socket.emit('sendMessage', message);
         setMessage('');
         if (inputRef.current) {
@@ -133,6 +141,7 @@ const Room: React.FC = () => {
                         sendMessage={sendMessage} 
                         setMessage={setMessage} 
                         inputRef={inputRef}
+                        chatAreaRef={chatAreaRef}
                         />
                     </Flex>
                 </Flex>
@@ -146,38 +155,7 @@ const Room: React.FC = () => {
         alignItems="center"
         flexDirection="column"
         >
-            <Gbox>
-                <Text as="b">名前を入力して、ルームに入室してください</Text>
-                <Input
-                onChange={e => setUserName(e.target.value)}
-                placeholder="ニックネーム"
-                w="22rem"
-                mt="5"
-                />
-                <Text color="red" textAlign="left" w="22rem" mt="1" fontSize="sm">
-                    
-                    {nameError && 
-                    <Text mt="1">
-                        <span className="material-symbols-outlined md-18">
-                            cancel
-                        </span>
-                        <Box as="span" verticalAlign="top" ml="1">
-                        {nameError}
-                        </Box>
-                    </Text>
-                    }
-                </Text>
-                <Button
-                onClick={joinRoom}
-                colorScheme="yellow"
-                w="22rem"
-                size="lg"
-                border="none"
-                mt="35"
-                >
-                ルームに入室
-                </Button>
-            </Gbox>
+            <JoinRoom createFlg={false} joinRoom={joinRoom} nameError={nameError} setUserName={setUserName} />
         </Flex>
         )}
         </>
