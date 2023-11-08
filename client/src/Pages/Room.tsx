@@ -89,16 +89,14 @@ const Room: React.FC = () => {
             window.removeEventListener('popstate', blockBrowserBack)
         }
     }, [blockBrowserBack]);
+
     
     const sendMessage = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if(!message) return;
         socket.emit('sendMessage', message);
         setMessage('');
-        if (inputRef.current) {
-            inputRef.current.value = '';
-        }
-    };
+    }
 
     const joinRoom = () => {
         if(userNameValidation(userName)) {
@@ -142,6 +140,7 @@ const Room: React.FC = () => {
                         setMessage={setMessage} 
                         inputRef={inputRef}
                         chatAreaRef={chatAreaRef}
+                        message={message}
                         />
                     </Flex>
                 </Flex>

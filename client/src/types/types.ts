@@ -44,6 +44,7 @@ export type ChatAreaProps = {
     setMessage: React.Dispatch<React.SetStateAction<string>>;
     inputRef: React.MutableRefObject<HTMLInputElement | null>;
     chatAreaRef: React.MutableRefObject<HTMLInputElement | null>;
+    message: string;
 }
 
 export type UserInfoProps = {

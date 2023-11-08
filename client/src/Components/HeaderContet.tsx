@@ -31,8 +31,8 @@ const HeaderContent:React.FC<HeaderProps> = ( props ) => {
   },[]);
 
   return (
-    <Flex height="10%" justify="space-between" align="center" p="10">
-                <Button onClick={addModal.onOpen} bg="rgba(255, 255, 255, 0.95)" borderRadius="30px" w="12rem"
+    <Flex height="10%" justify="space-between" align="center" w="100%" p="5">
+                <Button onClick={addModal.onOpen} bg="rgba(255, 255, 255, 0.95)" borderRadius="30px" w="10%"
                 size="lg">
                     <Text as="span" color={mainColor}>
                     招待

@@ -12,7 +12,7 @@ import Gbox from './GlassBox';
 
 /** チャットエリアコンポーネント */
 const ChatArea:React.FC<ChatAreaProps> = ( props ) => {
-    const { roomId, messageList, sendMessage, setMessage, inputRef, chatAreaRef } = props;
+    const { roomId, messageList, sendMessage, setMessage, inputRef, chatAreaRef, message } = props;
 
   return (
     <Gbox w="100%" h="60%" justifyContent="flex-start">
@@ -28,11 +28,13 @@ const ChatArea:React.FC<ChatAreaProps> = ( props ) => {
                 <Input
                 onChange={e => setMessage(e.target.value)}
                 ref={inputRef}
+                value={message}
                 w="75%"
                 mt="5"
                 mb="35"
                 border="none"
-                bg="rgba(255, 255, 255, 0.2)"
+                bg="rgba(255, 255, 255, 0.8)"
+                borderRadius="30px"
                 z-index="100"
                 />
                 <Button
