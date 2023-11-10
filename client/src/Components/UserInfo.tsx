@@ -21,30 +21,30 @@ const UserInfo:React.FC<UserInfoProps> = ( props ) => {
         <>
         {users.map((user, index) => (
             user.userId === socket.id ? null : (
-                <Flex w="70%" h="25%" bg={mainColor} borderRadius="8px" mb="2rem" color={subColor} justify="center" align="center">
+                <Flex w="100%" h="25%" maxW="12rem" maxH="10rem" bg={mainColor} borderRadius="8px" mb="1rem" color={subColor} justify="center" align="center">
                     <Flex w="90%" h="90%" border="1px solid" flexDirection="column" align="center">
-                        <Text as="b" key={user.userId} color={subColor} border="1px solid #FFDCAD" py=".3rem" px=".5rem" mt="1rem" borderRadius="4px">
+                        <Text as="b" key={user.userId} color={subColor} border="1px solid #FFDCAD" py=".1rem" px=".5rem" mt=".5rem" borderRadius="4px">
                             {user.name}
                         </Text>
-                        <Flex justify="center" align="center" mt="1rem">
-                            <Box as="span" display="inline-block" w="2.5rem" h="2.5rem" bg={color_g} borderRadius="3px" mr="0.5rem">
+                        <Flex justify="center" align="center" mt=".5rem">
+                            <Box as="span" display="inline-block" w="2rem" h="2rem" bg={color_g} borderRadius="3px" mr="0.5rem">
 
                             </Box>
-                            <Box as="span" display="inline-block" w="2.5rem" h="2.5rem" bg={color_p} borderRadius="3px" mr="0.5rem">
+                            <Box as="span" display="inline-block" w="2rem" h="2rem" bg={color_p} borderRadius="3px" mr="0.5rem">
 
                             </Box>
-                            <Box as="span" display="inline-block" w="2.5rem" h="2.5rem" bg={color_m} borderRadius="3px" mr="0.5rem">
+                            <Box as="span" display="inline-block" w="2rem" h="2rem" bg={color_m} borderRadius="3px" mr="0.5rem">
 
                             </Box>
                         </Flex>
-                        <Flex justify="center" align="center" mt="1rem">
-                            <Box as="span" display="inline-block" w="2.5rem" h="2.5rem" bg={color_v} borderRadius="3px" mr="0.5rem">
+                        <Flex justify="center" align="center" mt=".5rem">
+                            <Box as="span" display="inline-block" w="2rem" h="2rem" bg={color_v} borderRadius="3px" mr="0.5rem">
 
                             </Box>
-                            <Box as="span" display="inline-block" w="2.5rem" h="2.5rem" bg={color_d} borderRadius="3px" mr="0.5rem">
+                            <Box as="span" display="inline-block" w="2rem" h="2rem" bg={color_d} borderRadius="3px" mr="0.5rem">
 
                             </Box>
-                            <Box as="span" display="inline-block" w="2.5rem" h="2.5rem" bg="gray" borderRadius="3px" mr="0.5rem">
+                            <Box as="span" display="inline-block" w="2rem" h="2rem" bg="gray" borderRadius="3px" mr="0.5rem">
 
                             </Box>
                         </Flex>

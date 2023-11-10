@@ -15,9 +15,35 @@ export type UserObj = {
     userId: string;
     roomId: string;
     name: string;
+    hands: Card[];
 }
 
-// コンポーネント
+export type Card = {
+    cardId: number;
+    cardType: string,
+    cardName: string,
+    cardEffect: string,
+    cardImgUrl: string
+}
+
+export const Deck = [
+    {
+        cardId: 1,
+        cardType: "Gogh",
+        cardName: "Sunflower",
+        cardEffect: "double",
+        cardImgUrl: "./img"
+    },
+    {
+        cardId: 2,
+        cardType: "Gogh",
+        cardName: "Sunflower",
+        cardEffect: "double",
+        cardImgUrl: "./img"
+    },
+];
+
+// コンポーネントProps
 export type GboxProps = {
     w?: string;
     h?: string;

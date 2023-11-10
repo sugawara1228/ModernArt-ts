@@ -1,21 +1,11 @@
 import React, { useState, useEffect, useContext, useRef, useCallback } from 'react';
-import {
-  Flex,
-  Button,
-  Heading,
-  Text,
-  Center,
-  Input,
-  Box,
-} from '@chakra-ui/react';
-import Gbox from '../Components/GlassBox';
+import { Flex, Box, } from '@chakra-ui/react';
 import { Socket } from 'socket.io-client';
 import { SocketContext } from '../index';
 import { useNavigate } from 'react-router-dom';
 import { userNameValidation } from '../utility/validation';
-import { RoomObj, UserObj } from '../types/types'
+import { RoomObj, UserObj } from '../types/types';
 import Loading from '../Components/Loading';
-import MainBtn from '../Components/MainBtn';
 import HeaderContent from '../Components/HeaderContet';
 import ChatArea from '../Components/ChatArea';
 import SellingPrice from '../Components/SellingPrice';
@@ -91,6 +81,7 @@ const Room: React.FC = () => {
     }, [blockBrowserBack]);
 
     
+    /** メッセージ送信 */
     const sendMessage = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if(!message) return;
@@ -98,6 +89,7 @@ const Room: React.FC = () => {
         setMessage('');
     }
 
+    /** ルーム入室 */
     const joinRoom = () => {
         if(userNameValidation(userName)) {
             // 入力チェック
@@ -112,6 +104,7 @@ const Room: React.FC = () => {
          } 
     }
 
+    /** ルーム退出 */
     const leaveRoom = () => {
         socket.emit('leaveRoom');
 
@@ -127,11 +120,14 @@ const Room: React.FC = () => {
             { isLoading ? <Loading /> : (
             <>
                 <HeaderContent joinedUsers={joinedUsers} leaveRoom={leaveRoom} addPath={addPath}/>
-                <Flex height="90vh" justifyContent="center" alignItems="center" py="5" px="10">
-                    <Flex h="100%" w="20%" justifyContent="center" alignItems="center" flexDirection="column">
+                <Flex height="90vh" justify="center" align="center" py="5" px="5">
+                    <Flex h="100%" w="13%"  align="center" flexDirection="column">
                         <UserInfo users={users}/>
                     </Flex>
-                    <Flex h="100%" w="20%" justifyContent="center" alignItems="center" flexDirection="column">
+                    <Flex h="100%" w="67%" justify="center" align="center" flexDirection="column">
+                        メインエリア
+                    </Flex>
+                    <Flex h="100%" w="20%" justify="center" align="center" flexDirection="column">
                         <SellingPrice />
                         <ChatArea 
                         roomId={roomId} 
