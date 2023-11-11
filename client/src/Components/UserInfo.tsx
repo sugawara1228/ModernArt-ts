@@ -21,9 +21,9 @@ const UserInfo:React.FC<UserInfoProps> = ( props ) => {
         <>
         {users.map((user, index) => (
             user.userId === socket.id ? null : (
-                <Flex w="100%" h="25%" maxW="12rem" maxH="10rem" bg={mainColor} borderRadius="8px" mb="1rem" color={subColor} justify="center" align="center">
+                <Flex w="100%" h="25%" maxW="12rem" maxH="10rem" bg={mainColor} borderRadius="8px" mb="1rem" color={subColor} justify="center" align="center" key={index} >
                     <Flex w="90%" h="90%" border="1px solid" flexDirection="column" align="center">
-                        <Text as="b" key={user.userId} color={subColor} border="1px solid #FFDCAD" py=".1rem" px=".5rem" mt=".5rem" borderRadius="4px">
+                        <Text as="b" key={user.userId} color={subColor}  py=".1rem" px=".5rem" mt=".5rem" borderRadius="4px">
                             {user.name}
                         </Text>
                         <Flex justify="center" align="center" mt=".5rem">

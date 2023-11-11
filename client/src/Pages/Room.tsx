@@ -37,21 +37,34 @@ const Room: React.FC = () => {
     useEffect(() => {
         // サーバーからのメッセージ受信通知
         socket.on('messageReceived', (sendName: string, message: string) => {
+            console.log('Received message:', sendName, message);
             setMessageList((prevMessageList) => [...prevMessageList, sendName + ': ' + message]);
-            if (chatAreaRef.current) {
-                chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
-            }
+            setTimeout(() => {
+                if (chatAreaRef.current) {
+                  chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
+                }
+            }, 0);
         });
+    
 
         // サーバーからのルーム入室通知
         socket.on('roomJoined', (room: RoomObj, user: UserObj) => {
+            console.log("ユーザーが入室しました。");
+            console.log("room:", room);
+            console.log("user:", user);
+            console.log(messageList);
             setRoomId(user.roomId);
             setUserId(user.userId);
             setUserName(user.name);
             setUsers(room.users);
-            setMessageList((prevMessageList) => [...prevMessageList, user.name + 'が入室しました。']);
+            setMessageList((prevMessageList) => [...prevMessageList,  'システム: ' + user.name + 'が入室しました。']);
             setJoinedUsers(room.users.length);
             setJoinFlg(true);
+            setTimeout(() => {
+                if (chatAreaRef.current) {
+                  chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
+                }
+            }, 0);
             setTimeout(() => {
                 setIsLoading(false);
             }, 900);
@@ -59,12 +72,25 @@ const Room: React.FC = () => {
 
         // サーバーからのルーム退出通知
         socket.on('leaveRoom', (room: RoomObj, user: UserObj) => {
-            setMessageList((prevMessageList) => [...prevMessageList, user.name + 'が退出しました。']);
+            console.log("ユーザーが退出しました。");
+            console.log("room:", room);
+            console.log("user:", user);
+            console.log(messageList);
+            if (user.userId !== socket.id) {
+                setMessageList((prevMessageList) => [...prevMessageList, 'システム: ' + user.name + 'が退出しました。']);
+            }
+            setTimeout(() => {
+                if (chatAreaRef.current) {
+                  chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
+                }
+            }, 0);
             setUsers(room.users);
             setJoinedUsers(room.users.length);
         });
 
+
     },[]);
+    
 
     /** ブラウザバックの禁止 */
     useEffect(() => {
@@ -116,7 +142,7 @@ const Room: React.FC = () => {
         <>
         { joinFlg ? (
         
-        <Box w="100vw" h="100vh" bg="rgba(66, 68, 86, 0.1)" backdropFilter="blur(12px)">
+        <Box w="100vw" h="100vh" bg="rgba(66, 68, 86, 0.3)" backdropFilter="blur(12px)">
             { isLoading ? <Loading /> : (
             <>
                 <HeaderContent joinedUsers={joinedUsers} leaveRoom={leaveRoom} addPath={addPath}/>

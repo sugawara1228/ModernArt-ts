@@ -133,6 +133,14 @@ const leaveRoom = (socket: Socket) => {
 
     socket.leave(user.roomId);
     console.log(`ユーザー "${user.name}" がルーム "${user.roomId}" から退出しました`);
+    const room = io.sockets.adapter.rooms.get(user.roomId);
+    if (room) {
+      const numberOfClients = room.size;
+      console.log(`ルーム ${user.roomId} にいるクライアントの数: ${numberOfClients}`);
+    } else {
+      console.log(`ルーム ${user.roomId} は存在しません。`);
+    }
+
   }
 }
 

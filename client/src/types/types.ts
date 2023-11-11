@@ -47,7 +47,8 @@ export const Deck = [
 export type GboxProps = {
     w?: string;
     h?: string;
-    justifyContent?: string;
+    justify?: string;
+    align?: string;
     children?: React.ReactNode;
 }
 

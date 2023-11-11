@@ -11,7 +11,15 @@ const container = document.getElementById('root');
 const root = ReactDOM.createRoot(container!);
 
 // Socket.ioのインスタンスを作成
-const socket = io('http://localhost:3001');
+const socket = io('http://localhost:3001',{
+  transportOptions: {
+    polling: {
+      extraHeaders: {
+        'pingInterval': 25000, // pingメッセージの送信間隔（ミリ秒）を設定
+      },
+    },
+  },
+});
 
 // Contextを作成
 export const SocketContext = createContext(socket);

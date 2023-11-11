@@ -15,11 +15,24 @@ const ChatArea:React.FC<ChatAreaProps> = ( props ) => {
     const { roomId, messageList, sendMessage, setMessage, inputRef, chatAreaRef, message } = props;
 
   return (
-    <Gbox w="100%" h="60%" justifyContent="flex-start">
+    <Gbox w="100%" h="60%" justify="flex-start" align="center">
         <Text color="rgba(255, 255, 255, 0.7)" mb="2rem">Game log</Text>
-        <Box className="chat" w="90%" h="70%" maxH="70%" overflowY="scroll" ref={chatAreaRef}>
+        <Box className="chat" w="90%" h="65%" maxH="70%" overflowY="scroll" ref={chatAreaRef} paddingLeft="5" fontSize="15px">
             {messageList.map((messageContent, index) => {
-                return <Text key={index} color={subColor}> {messageContent}</Text>;
+                // メッセージの内容を分割して名前と本文に分ける
+                const [sendName, message] = messageContent.split(':');
+                
+                // メッセージ本文のスタイル
+                const messageStyle = sendName === "システム" ? "blue.100" : "white";
+
+                return (
+                <Text key={index} textAlign="left">
+                    {sendName === "システム" ? null : (
+                    <Text as="span" textAlign="left" color={subColor}> {sendName}: </Text>
+                    )}
+                    <Text as="span" textAlign="left" color={messageStyle}> {message}</Text>
+                </Text>
+                );
             })}
         </Box>
         <Box position="absolute" bottom="1" w="100%">
