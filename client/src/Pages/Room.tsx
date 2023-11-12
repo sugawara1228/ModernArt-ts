@@ -12,6 +12,7 @@ import SellingPrice from '../Components/SellingPrice';
 import UserInfo from '../Components/UserInfo';
 import { subColor } from '../constants/cssConstants';
 import JoinRoom from '../Components/JoinRoom';
+import ControlPanel from '../Components/ControlPanel';
 
 const Room: React.FC = () => {
   const socket: Socket = useContext(SocketContext);
@@ -26,11 +27,12 @@ const Room: React.FC = () => {
   const [joinFlg, setJoinFlg] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const chatAreaRef = useRef<HTMLInputElement | null>(null);
+  const [sliderValue, setSliderValue] = useState<number>(1000);
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const blockBrowserBack = useCallback(() => {
     window.history.go(1)
   }, []);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   
   const addPath: string = window.location.href;
   
@@ -138,6 +140,51 @@ const Room: React.FC = () => {
         navigate('/');
     }
 
+    /** スライダーでの金額の取得 */
+    const handleSliderChange = (value: number) => {
+        setSliderValue(value);
+    };
+
+    const intervalRef = useRef<NodeJS.Timeout | undefined>(undefined);
+    
+    /** スライダー - ボタン押下時処理 */
+    const minusButtonClick = () => {
+        intervalRef.current = setInterval(() => {
+            if(sliderValue === 1000) return;
+            setSliderValue((prevValue) => {
+                const newValue = prevValue - 1000;
+                if (newValue >= 1000) {
+                    return newValue;
+                } else {
+                    clearInterval(intervalRef.current);
+                    return 1000;
+                }
+            });
+        }, 40);
+    };
+
+    /** スライダー + ボタン押下時処理 */
+    const plusButtonClick = () => {
+        intervalRef.current = setInterval(() => {
+            if(sliderValue === 100000) return;
+            setSliderValue((prevValue) => {
+                const newValue = prevValue + 1000;
+                if (newValue <= 100000) {
+                    return newValue;
+                } else {
+                    clearInterval(intervalRef.current);
+                    return 100000;
+                }
+            });
+        }, 40);
+    };
+
+    const handleStop = () => {
+        if (intervalRef.current !== undefined) {
+            clearInterval(intervalRef.current);
+        }
+    };
+
     return (
         <>
         { joinFlg ? (
@@ -151,7 +198,13 @@ const Room: React.FC = () => {
                         <UserInfo users={users}/>
                     </Flex>
                     <Flex h="100%" w="67%" justify="center" align="center" flexDirection="column">
-                        メインエリア
+                        <ControlPanel 
+                        onChange={handleSliderChange} 
+                        sliderValue={sliderValue}
+                        minusButtonClick={minusButtonClick}
+                        plusButtonClick={plusButtonClick}
+                        handleStop={handleStop}
+                        />
                     </Flex>
                     <Flex h="100%" w="20%" justify="center" align="center" flexDirection="column">
                         <SellingPrice />

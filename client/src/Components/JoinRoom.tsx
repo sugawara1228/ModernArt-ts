@@ -47,11 +47,11 @@ const JoinRoom: React.FC<JoinRoomProps> = (props) => {
             }
         </Text>
         {createFlg? (
-            <MainBtn onClick={createRoom} >
+            <MainBtn onClick={createRoom} icon="ok" mt="3rem">
                 ルームを作成
             </MainBtn>
         ) : (
-            <MainBtn onClick={joinRoom} >
+            <MainBtn onClick={joinRoom} icon="ok" mt="3rem">
                 ルームに入室
             </MainBtn>
         )}

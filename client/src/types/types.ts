@@ -55,6 +55,11 @@ export type GboxProps = {
 export type BtnProps = {
     w?: string;
     onClick?: (event: React.MouseEvent<HTMLElement>) => void;
+    icon?: string;
+    mt?: string;
+    mb?: string;
+    mr?: string;
+    ml?: string;
     children?: React.ReactNode;
 }
 
@@ -84,4 +89,12 @@ export type JoinRoomProps = {
     createRoom?: () => void;
     joinRoom?: () => void;
     setUserName: (e: string) => void;
+}
+
+export type ControlPanelProps = {
+    onChange: (e: number) => void;
+    sliderValue: number;
+    minusButtonClick: () => void;
+    plusButtonClick: () => void;
+    handleStop: () => void;
 }

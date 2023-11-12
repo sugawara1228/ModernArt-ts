@@ -4,6 +4,9 @@
 .material-symbols-outlined.md-18 { 
     font-size: 18px; 
 }
+.material-symbols-outlined.mr-1 { 
+  margin-right: .5rem; 
+}
 
 
 .chat {

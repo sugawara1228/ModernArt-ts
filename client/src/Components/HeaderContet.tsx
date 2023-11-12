@@ -18,6 +18,7 @@ import {
     useClipboard,} from '@chakra-ui/react';
 import { HeaderProps } from "../types/types";
 import { mainColor } from '../constants/cssConstants';
+import MainBtn from './MainBtn';
 
 const HeaderContent:React.FC<HeaderProps> = ( props ) => {
   const { joinedUsers, leaveRoom, addPath } = props;
@@ -75,10 +76,9 @@ const HeaderContent:React.FC<HeaderProps> = ( props ) => {
             </AlertDialogOverlay>
         </AlertDialog>
 
-        <Button onClick={leaveModal.onOpen} bg="rgba(255, 255, 255, 0.95)" borderRadius="30px" w="10rem"
-            size="lg" color={mainColor}>
-                ルーム退出
-        </Button>
+        <MainBtn onClick={leaveModal.onOpen} icon="logout" w="12rem">
+            ルーム退出
+        </MainBtn>
         
         <AlertDialog
             isOpen={leaveModal.isOpen}
