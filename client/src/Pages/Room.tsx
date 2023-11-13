@@ -30,6 +30,7 @@ const Room: React.FC = () => {
   const [sliderValue, setSliderValue] = useState<number>(1000);
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isDisconnect, setIsDisconnect] = useState<boolean>(false);
   const blockBrowserBack = useCallback(() => {
     window.history.go(1)
   }, []);
@@ -48,7 +49,6 @@ const Room: React.FC = () => {
             }, 0);
         });
     
-
         // サーバーからのルーム入室通知
         socket.on('roomJoined', (room: RoomObj, user: UserObj) => {
             console.log("ユーザーが入室しました。");
@@ -90,8 +90,11 @@ const Room: React.FC = () => {
             setJoinedUsers(room.users.length);
         });
 
+        return () => {
+            socket.off();
+        };
 
-    },[]);
+    },[]);  
     
 
     /** ブラウザバックの禁止 */
@@ -190,6 +193,13 @@ const Room: React.FC = () => {
         { joinFlg ? (
         
         <Box w="100vw" h="100vh" bg="rgba(66, 68, 86, 0.3)" backdropFilter="blur(12px)">
+            { isDisconnect ? (
+                <Flex h="100%" w="100%" justify="center" align="center" bg="rgba(0,0,0,0.7)">
+                    <Box h="6rem" w="14rem">
+                        通信が切断されました。
+                    </Box>
+                </Flex>
+            ) : null }
             { isLoading ? <Loading /> : (
             <>
                 <HeaderContent joinedUsers={joinedUsers} leaveRoom={leaveRoom} addPath={addPath}/>

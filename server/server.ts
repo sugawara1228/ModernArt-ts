@@ -10,6 +10,8 @@ const io = new Server(server, {
     origin: "http://localhost:3000",
     methods: ["GET", "POST"],
   },
+  pingTimeout: 1800000,
+  pingInterval: 25000,
 });
 
 const rooms: Rooms = {};
@@ -27,7 +29,7 @@ io.on("connection", (socket: Socket) => {
 
     // もし前のデータがあった場合、先にデータ削除＆ルーム退出処理を行う
     if(oldUserData) {
-      console.log(`socket.id: "${socket.id}のユーザーの以前のデータが残っています。`);
+      console.log(`socket.id: "${socket.id}"のユーザーの以前のデータが残っています。`);
       console.log('以前のデータの削除、退出処理を実行します');
       leaveRoom(socket);
     }
@@ -51,7 +53,7 @@ io.on("connection", (socket: Socket) => {
     socket.join(roomId);
 
     // クライアントにルーム作成完了を通知
-    socket.emit("roomJoined", rooms[roomId], users[socket.id]);
+    io.to(roomId).emit("roomJoined", rooms[roomId], users[socket.id]);
     console.log(`socket.id:"${socket.id}"のユーザー "${userName}" がルーム "${roomId}" を作成しました`);
   });
 
