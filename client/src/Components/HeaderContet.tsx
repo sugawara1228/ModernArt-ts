@@ -24,13 +24,15 @@ import { mainColor } from '../constants/cssConstants';
 import MainBtn from './MainBtn';
 
 const HeaderContent:React.FC<HeaderProps> = ( props ) => {
-  const { joinedUsers, addPath } = props;
+  const { joinedUsers} = props;
   const socket: Socket = useContext(SocketContext);
   const navigate = useNavigate();
   const addModal = useDisclosure();
   const leaveModal = useDisclosure();
   const cancelRef = useRef(null);
   const { onCopy, value, setValue, hasCopied } = useClipboard("");
+
+  const addPath: string = window.location.href;
 
   useEffect(() => {
     setValue(addPath);

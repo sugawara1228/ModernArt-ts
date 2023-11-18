@@ -57,7 +57,6 @@ const Room: React.FC = () => {
         };
 
     },[]);  
-    
 
     /** ブラウザバックの禁止 */
     useEffect(() => {
