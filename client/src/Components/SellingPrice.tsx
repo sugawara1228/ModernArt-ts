@@ -16,9 +16,9 @@ const SellingPrice:React.FC = ( ) => {
 
   return (
     <Flex w="100%" h="40%" bg={mainColor} borderRadius="8px" mb="2rem" color={subColor} justify="center" align="center">
-        <Flex w="90%" h="90%" border="1px solid" flexDirection="column" align="center">
-            <Text mt="1rem" fontSize="18px">現在の売値</Text>
-            <List w="100%" textAlign="center" fontSize="17px" mt="2rem">
+        <Flex w="90%" h="90%" border="1px solid" flexDirection="column" justify="center" align="center">
+            <Text>現在の売値</Text>
+            <List w="100%" textAlign="center" fontSize="15px" mt=".5rem">
                 <ListItem mb=".5rem">
                     
                     <Text as="span" display="inline-block" textAlign="left" w="35%" ml="3rem">

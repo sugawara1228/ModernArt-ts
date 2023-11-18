@@ -38,6 +38,7 @@ io.on("connection", (socket: Socket) => {
     users[socket.id] = {
       userId: socket.id,
       roomId: roomId,
+      isHost: true,
       name: userName
     }
 
@@ -54,6 +55,7 @@ io.on("connection", (socket: Socket) => {
 
     // クライアントにルーム作成完了を通知
     io.to(roomId).emit("roomJoined", rooms[roomId], users[socket.id]);
+    io.to(roomId).emit("roomJoinedMessage", users[socket.id]);
     console.log(`socket.id:"${socket.id}"のユーザー "${userName}" がルーム "${roomId}" を作成しました`);
   });
 
@@ -71,6 +73,7 @@ io.on("connection", (socket: Socket) => {
     // ユーザー情報追加
     users[socket.id] = {
       userId: socket.id,
+      isHost: false,
       roomId: roomId,
       name: userName
     }
@@ -85,6 +88,7 @@ io.on("connection", (socket: Socket) => {
 
     // クライアントにルーム作成完了を通知
     io.to(roomId).emit("roomJoined", rooms[roomId], users[socket.id]);
+    io.to(roomId).emit("roomJoinedMessage", users[socket.id]);
     console.log(`socket.id:"${socket.id}"のユーザー "${userName}" がルーム "${roomId}" に入室しました`);
   });
 
@@ -101,6 +105,7 @@ io.on("connection", (socket: Socket) => {
 
         // ルーム内の全員に送信
         io.to(roomId).emit("messageReceived", userName, message);
+        io.to(roomId).emit("test");
         console.log(`roomID${roomId}に入室している${userName}がメッセージを送信しました。${message}`);
     }
   });
@@ -127,13 +132,36 @@ io.on("connection", (socket: Socket) => {
  */
 const leaveRoom = (socket: Socket) => {
   const user: UserObj | undefined = users[socket.id];
+
   if (user) {
+
+    // 退出するユーザーがホストだった場合、先に他のユーザーにホスト権限を譲渡する
+    if (user.isHost) {
+      const roomJoinedUser: number = rooms[user.roomId].users.length;
+      if (roomJoinedUser > 1) {
+        // 通常index[0]にhostが入っているはずなので、index[1]にhostを渡せばいいが、念のためindex[1]がhostじゃないか確認
+        const nextHostIndex: number = rooms[user.roomId].users[1].isHost === true ? 2 : 1; 
+        rooms[user.roomId].users[nextHostIndex].isHost = true;
+        console.log(`ホスト権限を${rooms[user.roomId].users[nextHostIndex].name}に譲渡 isHost ${rooms[user.roomId].users[nextHostIndex].isHost }`);
+        const nextHostName = rooms[user.roomId].users[nextHostIndex].name;
+        setTimeout(() => {
+           // ホストが変更したことをルーム内全クライアントに通知
+          io.to(user.roomId).emit("hostChange", nextHostName);
+        }, 1000)
+      }
+    }
+
+    // roomsとusersからそれぞれデータを削除
     rooms[user.roomId].users = rooms[user.roomId].users.filter(user => user.userId !== socket.id);
     delete users[socket.id];
 
+    // ルームから退出したことをルーム内全クライアントに通知
     io.to(user.roomId).emit("leaveRoom", rooms[user.roomId], user);
+    io.to(user.roomId).emit("leaveRoomMessage", rooms[user.roomId], user);
 
+    // ルームから退出させる
     socket.leave(user.roomId);
+    
     console.log(`ユーザー "${user.name}" がルーム "${user.roomId}" から退出しました`);
     const room = io.sockets.adapter.rooms.get(user.roomId);
     if (room) {
@@ -142,7 +170,6 @@ const leaveRoom = (socket: Socket) => {
     } else {
       console.log(`ルーム ${user.roomId} は存在しません。`);
     }
-
   }
 }
 

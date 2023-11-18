@@ -54,6 +54,7 @@ export type GboxProps = {
 
 export type BtnProps = {
     w?: string;
+    maxW?: string;
     onClick?: (event: React.MouseEvent<HTMLElement>) => void;
     icon?: string;
     mt?: string;
@@ -65,21 +66,22 @@ export type BtnProps = {
 
 export type HeaderProps = {
     joinedUsers: number;
-    leaveRoom: () => void;
-    addPath: string;
 }
 
-export type ChatAreaProps = {
-    roomId: string;
-    messageList: string[];
-    sendMessage: (event: React.FormEvent<HTMLFormElement>) => void;
-    setMessage: React.Dispatch<React.SetStateAction<string>>;
-    inputRef: React.MutableRefObject<HTMLInputElement | null>;
-    chatAreaRef: React.MutableRefObject<HTMLInputElement | null>;
-    message: string;
-}
+// export type ChatAreaProps = {
+//     roomId: string;
+//     messageList: string[];
+//     setMessage: React.Dispatch<React.SetStateAction<string>>;
+//     inputRef: React.MutableRefObject<HTMLInputElement | null>;
+//     chatAreaRef: React.MutableRefObject<HTMLInputElement | null>;
+//     message: string;
+// }
 
 export type UserInfoProps = {
+    users: UserObj[];
+}
+
+export type YourInfoProps = {
     users: UserObj[];
 }
 
@@ -91,10 +93,10 @@ export type JoinRoomProps = {
     setUserName: (e: string) => void;
 }
 
-export type ControlPanelProps = {
-    onChange: (e: number) => void;
-    sliderValue: number;
-    minusButtonClick: () => void;
-    plusButtonClick: () => void;
-    handleStop: () => void;
-}
+// export type ControlPanelProps = {
+//     onChange: (e: number) => void;
+//     sliderValue: number;
+//     minusButtonClick: () => void;
+//     plusButtonClick: () => void;
+//     handleStop: () => void;
+// }

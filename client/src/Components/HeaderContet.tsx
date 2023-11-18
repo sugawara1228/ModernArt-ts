@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect }from 'react';
+import React, { useState, useRef, useEffect, useContext }from 'react';
 import { 
     Flex,
     Button,
@@ -17,11 +17,16 @@ import {
     useDisclosure,
     useClipboard,} from '@chakra-ui/react';
 import { HeaderProps } from "../types/types";
+import { Socket } from 'socket.io-client';
+import { SocketContext } from '../index';
+import { useNavigate } from 'react-router-dom';
 import { mainColor } from '../constants/cssConstants';
 import MainBtn from './MainBtn';
 
 const HeaderContent:React.FC<HeaderProps> = ( props ) => {
-  const { joinedUsers, leaveRoom, addPath } = props;
+  const { joinedUsers, addPath } = props;
+  const socket: Socket = useContext(SocketContext);
+  const navigate = useNavigate();
   const addModal = useDisclosure();
   const leaveModal = useDisclosure();
   const cancelRef = useRef(null);
@@ -30,6 +35,13 @@ const HeaderContent:React.FC<HeaderProps> = ( props ) => {
   useEffect(() => {
     setValue(addPath);
   },[]);
+
+    /** ルーム退出 */
+    const leaveRoom = () => {
+        socket.emit('leaveRoom');
+        // top画面に移動
+        navigate('/');
+    }
 
   return (
     <Flex height="10%" justify="space-between" align="center" w="100%" p="5">

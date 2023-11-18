@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect }from 'react';
+import React, { useState, useRef, useEffect, useContext }from 'react';
 import { 
     Button,
     Text,
@@ -6,18 +6,81 @@ import {
     Box,
     FormControl,
 } from '@chakra-ui/react';
-import { ChatAreaProps } from "../types/types";
+import { Socket } from 'socket.io-client';
+import { SocketContext } from '../index';
 import { mainColor, subColor } from '../constants/cssConstants';
+import { RoomObj, UserObj } from '../types/types';
 import Gbox from './GlassBox';
 
 /** チャットエリアコンポーネント */
-const ChatArea:React.FC<ChatAreaProps> = ( props ) => {
-    const { roomId, messageList, sendMessage, setMessage, inputRef, chatAreaRef, message } = props;
+const ChatArea:React.FC = () => {
+    const socket: Socket = useContext(SocketContext);
+    const [message, setMessage] = useState<string>('');
+    const [messageList, setMessageList] = useState<string[]>([]);
+    const inputRef = useRef<HTMLInputElement | null>(null);
+    const chatAreaRef = useRef<HTMLInputElement | null>(null);
+
+    useEffect(() => {
+
+        // サーバーからのメッセージ受信時処理
+        const messageReceivedHandler = (sendName: string, message: string) => {
+            console.log('Received message:', sendName, message);
+            setMessageList((prevMessageList) => [...prevMessageList, sendName + ': ' + message]);
+            setTimeout(() => {
+                if (chatAreaRef.current) {
+                  chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
+                }
+            }, 0);
+        };
+
+        // サーバーからのルーム入室通知時処理
+        const roomJoinedMessageHandler = (user: UserObj) => {
+            setMessageList((prevMessageList) => [...prevMessageList,  'システム: ' + user.name + 'が入室しました。']);
+            setTimeout(() => {
+                if (chatAreaRef.current) {
+                  chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
+                }
+            }, 0);
+        };
+
+         // サーバーからのルーム退出通知時処理
+         const leaveRoomMessageHandler = (user: UserObj) => {
+            console.log(messageList);
+            if (user.userId !== socket.id) {
+                setMessageList((prevMessageList) => [...prevMessageList, 'システム: ' + user.name + 'が退出しました。']);
+            }
+            setTimeout(() => {
+                if (chatAreaRef.current) {
+                  chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
+                }
+            }, 0);
+        };
+
+        // リスナーを登録
+        socket.on('messageReceived', messageReceivedHandler);
+        socket.on('leaveRoomMessage', leaveRoomMessageHandler);
+        socket.on('roomJoinedMessage', roomJoinedMessageHandler);
+
+        // クリーンアップ処理
+        return () => {
+            socket.off('messageReceived', messageReceivedHandler);
+            socket.off('leaveRoomMessage', leaveRoomMessageHandler);
+            socket.off('roomJoinedMessage', roomJoinedMessageHandler);
+        };
+    });
+
+    /** メッセージ送信 */
+    const sendMessage = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        if(!message) return;
+        socket.emit('sendMessage', message);
+        setMessage('');
+    }
 
   return (
     <Gbox w="100%" h="60%" justify="flex-start" align="center">
         <Text color="rgba(255, 255, 255, 0.7)" mb="2rem">Game log</Text>
-        <Box className="chat" w="90%" h="65%" maxH="70%" overflowY="scroll" ref={chatAreaRef} paddingLeft="5" fontSize="15px">
+        <Box className="chat" w="90%" h="65%" maxH="70%" overflowY="scroll" ref={chatAreaRef} paddingLeft="5" fontSize="14px">
             {messageList.map((messageContent, index) => {
                 // メッセージの内容を分割して名前と本文に分ける
                 const [sendName, message] = messageContent.split(':');
@@ -48,6 +111,7 @@ const ChatArea:React.FC<ChatAreaProps> = ( props ) => {
                 border="none"
                 bg="rgba(255, 255, 255, 0.8)"
                 borderRadius="30px"
+                fontSize="14px"
                 z-index="100"
                 />
                 <Button

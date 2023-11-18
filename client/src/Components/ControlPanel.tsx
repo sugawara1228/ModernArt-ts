@@ -1,4 +1,4 @@
-import React, { useState }from 'react';
+import React, { useState, useRef }from 'react';
 import { 
     Flex,
     Box,
@@ -10,13 +10,57 @@ import {
     SliderThumb,
     SliderMark,
 } from '@chakra-ui/react';
-import { ControlPanelProps } from '../types/types';
 import { mainColor, subColor } from '../constants/cssConstants';
 import MainBtn from './MainBtn';
 
-const ControlPanel:React.FC<ControlPanelProps>= ( props ) => {
-    const { onChange, sliderValue, minusButtonClick, plusButtonClick, handleStop } = props;
+const ControlPanel:React.FC= () => {
+    const [sliderValue, setSliderValue] = useState<number>(1000);
 
+     /** スライダーでの金額の取得 */
+     const handleSliderChange = (value: number) => {
+        setSliderValue(value);
+    };
+
+    const intervalRef = useRef<NodeJS.Timeout | undefined>(undefined);
+    
+    /** スライダー - ボタン押下時処理 */
+    const minusButtonClick = () => {
+        intervalRef.current = setInterval(() => {
+            if(sliderValue === 1000) return;
+            setSliderValue((prevValue) => {
+                const newValue = prevValue - 1000;
+                if (newValue >= 1000) {
+                    return newValue;
+                } else {
+                    clearInterval(intervalRef.current);
+                    return 1000;
+                }
+            });
+        }, 40);
+    };
+
+    /** スライダー + ボタン押下時処理 */
+    const plusButtonClick = () => {
+        intervalRef.current = setInterval(() => {
+            if(sliderValue === 100000) return;
+            setSliderValue((prevValue) => {
+                const newValue = prevValue + 1000;
+                if (newValue <= 100000) {
+                    return newValue;
+                } else {
+                    clearInterval(intervalRef.current);
+                    return 100000;
+                }
+            });
+        }, 40);
+    };
+
+    const handleStop = () => {
+        if (intervalRef.current !== undefined) {
+            clearInterval(intervalRef.current);
+        }
+    };
+    
     // カンマを挿入する関数
     const formatNumberWithCommas = (number: number) => {
         return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -25,14 +69,14 @@ const ControlPanel:React.FC<ControlPanelProps>= ( props ) => {
 
   return (
         <Flex w="80%" h="20%" bg={mainColor} justify="center" align="center" borderRadius="8px"> 
-            <MainBtn w="11rem" mr="2rem">
+            <MainBtn w="15%" maxW="11rem" mr="1rem">
                 パス
             </MainBtn>
-            <MainBtn icon="ok" w="16rem" mr="2rem">
+            <MainBtn w="22%"  maxW="16rem" mr="2rem">
                 入札する
             </MainBtn>
-            <Box>
-                <Flex w="8rem" h="2.5rem" m="auto" mb="7" justify="center" align="center" border="1px solid #FFDCAD" borderRadius="4px">
+            <Flex flexDirection="column" justify="center" align="center">
+                <Flex w="8rem" h="2.5rem" mx="auto" justify="center" align="center" border="1px solid #FFDCAD" borderRadius="4px">
                     <Text fontSize="20px" color={subColor}>
                         ${formatNumberWithCommas(sliderValue)}
                     </Text>
@@ -58,7 +102,7 @@ const ControlPanel:React.FC<ControlPanelProps>= ( props ) => {
                         min={1000} 
                         max={100000} 
                         step={1000}  
-                        onChange={onChange} 
+                        onChange={handleSliderChange} 
                         w="20rem"
                     >
                         <SliderTrack height="8px">
@@ -81,7 +125,7 @@ const ControlPanel:React.FC<ControlPanelProps>= ( props ) => {
                         </Text>
                     </Button>
                 </Flex>
-            </Box>
+            </Flex>
             
         </Flex>
   );

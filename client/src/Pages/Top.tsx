@@ -30,7 +30,7 @@ const [isLoading, setIsLoading] = useState<boolean>(true);
           </Center>
         </Heading>
         <Link to="/CreateRoom">
-          <MainBtn w="22rem">始める</MainBtn>
+          <MainBtn w="22rem" icon="ok">始める</MainBtn>
         </Link>
         </>
         

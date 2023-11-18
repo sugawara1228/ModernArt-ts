@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext, useRef, useCallback } from 'rea
 import { Flex, Box, } from '@chakra-ui/react';
 import { Socket } from 'socket.io-client';
 import { SocketContext } from '../index';
-import { useNavigate } from 'react-router-dom';
 import { userNameValidation } from '../utility/validation';
 import { RoomObj, UserObj } from '../types/types';
 import Loading from '../Components/Loading';
@@ -13,85 +12,48 @@ import UserInfo from '../Components/UserInfo';
 import { subColor } from '../constants/cssConstants';
 import JoinRoom from '../Components/JoinRoom';
 import ControlPanel from '../Components/ControlPanel';
+import YourInfo from '../Components/YourInfo';
+import GameMainDisp from '../Components/GameMainDisp';
 
 const Room: React.FC = () => {
   const socket: Socket = useContext(SocketContext);
-  const [message, setMessage] = useState<string>('');
-  const [userId, setUserId] = useState<string>('');
   const [userName, setUserName] = useState<string>('');
   const [nameError, setNameError] = useState<string>('');
-  const [roomId, setRoomId] = useState<string>('');
-  const [messageList, setMessageList] = useState<string[]>([]);
   const [users, setUsers ] = useState<UserObj[]>([]);
   const [joinedUsers, setJoinedUsers] = useState<number>(0);
   const [joinFlg, setJoinFlg] = useState<boolean>(false);
-  const inputRef = useRef<HTMLInputElement | null>(null);
-  const chatAreaRef = useRef<HTMLInputElement | null>(null);
-  const [sliderValue, setSliderValue] = useState<number>(1000);
-  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isDisconnect, setIsDisconnect] = useState<boolean>(false);
+  const [ isGameStart, setIsGameStart ] = useState<boolean>(false);
   const blockBrowserBack = useCallback(() => {
     window.history.go(1)
   }, []);
   
-  const addPath: string = window.location.href;
-  
     useEffect(() => {
-        // サーバーからのメッセージ受信通知
-        socket.on('messageReceived', (sendName: string, message: string) => {
-            console.log('Received message:', sendName, message);
-            setMessageList((prevMessageList) => [...prevMessageList, sendName + ': ' + message]);
-            setTimeout(() => {
-                if (chatAreaRef.current) {
-                  chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
-                }
-            }, 0);
-        });
-    
-        // サーバーからのルーム入室通知
-        socket.on('roomJoined', (room: RoomObj, user: UserObj) => {
-            console.log("ユーザーが入室しました。");
-            console.log("room:", room);
-            console.log("user:", user);
-            console.log(messageList);
-            setRoomId(user.roomId);
-            setUserId(user.userId);
+        // サーバーからのルーム入室通知時処理
+        const roomJoinedHandler = (room: RoomObj, user: UserObj) => {
             setUserName(user.name);
             setUsers(room.users);
-            setMessageList((prevMessageList) => [...prevMessageList,  'システム: ' + user.name + 'が入室しました。']);
             setJoinedUsers(room.users.length);
             setJoinFlg(true);
             setTimeout(() => {
-                if (chatAreaRef.current) {
-                  chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
-                }
-            }, 0);
-            setTimeout(() => {
                 setIsLoading(false);
             }, 900);
-        });
+        };
 
-        // サーバーからのルーム退出通知
-        socket.on('leaveRoom', (room: RoomObj, user: UserObj) => {
-            console.log("ユーザーが退出しました。");
-            console.log("room:", room);
-            console.log("user:", user);
-            console.log(messageList);
-            if (user.userId !== socket.id) {
-                setMessageList((prevMessageList) => [...prevMessageList, 'システム: ' + user.name + 'が退出しました。']);
-            }
-            setTimeout(() => {
-                if (chatAreaRef.current) {
-                  chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
-                }
-            }, 0);
+        // サーバーからのルーム退出通知時処理
+        const leaveRoomHandler = (room: RoomObj, user: UserObj) => {
             setUsers(room.users);
             setJoinedUsers(room.users.length);
-        });
+        };
+
+        // リスナーを登録
+        socket.on('roomJoined', roomJoinedHandler);
+        socket.on('leaveRoom', leaveRoomHandler);
 
         return () => {
-            socket.off();
+            socket.off('roomJoined', roomJoinedHandler);
+            socket.off('leaveRoom', leaveRoomHandler);
         };
 
     },[]);  
@@ -111,14 +73,6 @@ const Room: React.FC = () => {
         }
     }, [blockBrowserBack]);
 
-    
-    /** メッセージ送信 */
-    const sendMessage = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        if(!message) return;
-        socket.emit('sendMessage', message);
-        setMessage('');
-    }
 
     /** ルーム入室 */
     const joinRoom = () => {
@@ -135,59 +89,6 @@ const Room: React.FC = () => {
          } 
     }
 
-    /** ルーム退出 */
-    const leaveRoom = () => {
-        socket.emit('leaveRoom');
-
-        // top画面に移動
-        navigate('/');
-    }
-
-    /** スライダーでの金額の取得 */
-    const handleSliderChange = (value: number) => {
-        setSliderValue(value);
-    };
-
-    const intervalRef = useRef<NodeJS.Timeout | undefined>(undefined);
-    
-    /** スライダー - ボタン押下時処理 */
-    const minusButtonClick = () => {
-        intervalRef.current = setInterval(() => {
-            if(sliderValue === 1000) return;
-            setSliderValue((prevValue) => {
-                const newValue = prevValue - 1000;
-                if (newValue >= 1000) {
-                    return newValue;
-                } else {
-                    clearInterval(intervalRef.current);
-                    return 1000;
-                }
-            });
-        }, 40);
-    };
-
-    /** スライダー + ボタン押下時処理 */
-    const plusButtonClick = () => {
-        intervalRef.current = setInterval(() => {
-            if(sliderValue === 100000) return;
-            setSliderValue((prevValue) => {
-                const newValue = prevValue + 1000;
-                if (newValue <= 100000) {
-                    return newValue;
-                } else {
-                    clearInterval(intervalRef.current);
-                    return 100000;
-                }
-            });
-        }, 40);
-    };
-
-    const handleStop = () => {
-        if (intervalRef.current !== undefined) {
-            clearInterval(intervalRef.current);
-        }
-    };
-
     return (
         <>
         { joinFlg ? (
@@ -202,31 +103,26 @@ const Room: React.FC = () => {
             ) : null }
             { isLoading ? <Loading /> : (
             <>
-                <HeaderContent joinedUsers={joinedUsers} leaveRoom={leaveRoom} addPath={addPath}/>
+                <HeaderContent joinedUsers={joinedUsers}/>
                 <Flex height="90vh" justify="center" align="center" py="5" px="5">
+                    {/** User情報エリア */}
                     <Flex h="100%" w="13%"  align="center" flexDirection="column">
                         <UserInfo users={users}/>
                     </Flex>
+                    {/** Mainエリア */}
                     <Flex h="100%" w="67%" justify="center" align="center" flexDirection="column">
-                        <ControlPanel 
-                        onChange={handleSliderChange} 
-                        sliderValue={sliderValue}
-                        minusButtonClick={minusButtonClick}
-                        plusButtonClick={plusButtonClick}
-                        handleStop={handleStop}
-                        />
+                        <GameMainDisp/>
+                            <Flex w="80%" h="20%" justify="center" align="center">
+                                <YourInfo users={users}/>
+                            </Flex>
+                            { true ? (
+                            <ControlPanel />
+                            ) : null }
                     </Flex>
+                    {/** Chat&Price情報エリア */}
                     <Flex h="100%" w="20%" justify="center" align="center" flexDirection="column">
                         <SellingPrice />
-                        <ChatArea 
-                        roomId={roomId} 
-                        messageList={messageList} 
-                        sendMessage={sendMessage} 
-                        setMessage={setMessage} 
-                        inputRef={inputRef}
-                        chatAreaRef={chatAreaRef}
-                        message={message}
-                        />
+                        <ChatArea />
                     </Flex>
                 </Flex>
             </>

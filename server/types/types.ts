@@ -15,4 +15,5 @@ export type UserObj = {
     userId: string;
     roomId: string;
     name: string;
+    isHost: boolean;
 }

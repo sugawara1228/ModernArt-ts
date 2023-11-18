@@ -12,7 +12,7 @@ import { UserInfoProps } from "../types/types";
 import { mainColor, subColor, color_d, color_g, color_m, color_p, color_v } from '../constants/cssConstants';
 
 
-/** ユーザー情報エリア　コンポーネント */
+/** ユーザー情報（他人）エリア　コンポーネント */
 const UserInfo:React.FC<UserInfoProps> = ( props ) => {
     const { users } = props;
     const socket: Socket = useContext(SocketContext);
