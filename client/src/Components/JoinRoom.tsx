@@ -1,7 +1,7 @@
 import React, { useState }from 'react';
 import { Text, Spinner, Input, Box } from '@chakra-ui/react';
 import Gbox from './GlassBox';
-import MainBtn from './MainBtn';
+import MainBtn from './buttons/MainBtn';
 import { mainColor, subColor } from '../constants/cssConstants';
 import { JoinRoomProps } from '../types/types';
 

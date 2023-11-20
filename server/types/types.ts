@@ -4,6 +4,7 @@ export type Rooms = {
 
 export type RoomObj = {
     users: UserObj[];
+    isGameStart: boolean;
     turnIndex: number;
 }
 
@@ -16,4 +17,16 @@ export type UserObj = {
     roomId: string;
     name: string;
     isHost: boolean;
+    hands: Card[];
 }
+
+export type Deck = Array<Card>;
+
+export type Card = {
+    id: string;
+    type: string;
+    name: string;
+    effect: string;
+    url: string;
+}
+

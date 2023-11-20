@@ -9,7 +9,7 @@ import {
 import { Socket } from 'socket.io-client';
 import { SocketContext } from '../index';
 import { mainColor, subColor, color_d, color_g, color_m, color_p, color_v } from '../constants/cssConstants';
-import MainBtn from './MainBtn';
+import MainBtn from './buttons/MainBtn';
 
 
 /** ゲームメイン画面　コンポーネント */

@@ -14,6 +14,7 @@ import JoinRoom from '../Components/JoinRoom';
 import ControlPanel from '../Components/ControlPanel';
 import YourInfo from '../Components/YourInfo';
 import GameMainDisp from '../Components/GameMainDisp';
+import MyhandArea from '../Components/MyHandArea';
 
 const Room: React.FC = () => {
   const socket: Socket = useContext(SocketContext);
@@ -47,13 +48,19 @@ const Room: React.FC = () => {
             setJoinedUsers(room.users.length);
         };
 
+        const gameStartedHandler = (room: RoomObj) => {
+            setIsGameStart(true);
+        }
+
         // リスナーを登録
         socket.on('roomJoined', roomJoinedHandler);
         socket.on('leaveRoom', leaveRoomHandler);
+        socket.on('gameStarted', gameStartedHandler);
 
         return () => {
             socket.off('roomJoined', roomJoinedHandler);
             socket.off('leaveRoom', leaveRoomHandler);
+            socket.off('gameStarted', gameStartedHandler);
         };
 
     },[]);  
@@ -112,9 +119,12 @@ const Room: React.FC = () => {
                     <Flex h="100%" w="67%" justify="center" align="center" flexDirection="column">
                         <GameMainDisp/>
                             <Flex w="80%" h="20%" justify="center" align="center">
+                                { isGameStart ? (
+                                <MyhandArea />
+                                ) : null }
                                 <YourInfo users={users}/>
                             </Flex>
-                            { true ? (
+                            { isGameStart ? (
                             <ControlPanel />
                             ) : null }
                     </Flex>

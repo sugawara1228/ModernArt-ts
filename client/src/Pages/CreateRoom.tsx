@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { SocketContext } from '../index';
 import { userNameValidation } from '../utility/validation';
 import Loading from '../Components/Loading';
-import MainBtn from '../Components/MainBtn';
+import MainBtn from '../Components/buttons/MainBtn';
 import { mainColor, subColor } from '../constants/cssConstants';
 import JoinRoom from '../Components/JoinRoom';
 

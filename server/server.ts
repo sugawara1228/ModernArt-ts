@@ -1,7 +1,8 @@
-import { Rooms, Users, UserObj } from './types/types'
+import { Rooms, Users, UserObj, Deck } from './types/types'
 import express from "express";
 import http from "http";
 import { Server, Socket } from "socket.io";
+import { deck } from './cards';
 
 const app = express();
 const server = http.createServer(app);
@@ -39,12 +40,14 @@ io.on("connection", (socket: Socket) => {
       userId: socket.id,
       roomId: roomId,
       isHost: true,
-      name: userName
+      name: userName,
+      hands: [],
     }
 
     // ルーム情報
     rooms[roomId] = {
       users: [users[socket.id]],
+      isGameStart: false,
       turnIndex: 0
     };
 
@@ -75,7 +78,8 @@ io.on("connection", (socket: Socket) => {
       userId: socket.id,
       isHost: false,
       roomId: roomId,
-      name: userName
+      name: userName,
+      hands: [],
     }
 
     // ルーム情報追加
@@ -123,6 +127,53 @@ io.on("connection", (socket: Socket) => {
     console.log('退出処理を実行します');
     leaveRoom(socket);
   });
+
+  /** ゲーム開始ボタン押下処理 */
+  socket.on('gameStart', () => {
+    console.log('ゲームスタートボタン押下');
+    // メッセージの送信元のsocket.idから、ユーザー情報を取得
+    const user: UserObj | undefined = users[socket.id];
+
+    if(user) {
+        // ユーザ情報から、今いるルームidを取得
+        const roomId: string = user.roomId;
+
+        rooms[roomId].isGameStart = true;
+        
+        // 各ケースごとに配布されるカードの数を定義
+        let cardsToDistribute;
+        switch (rooms[roomId].users.length) {
+            case 1:
+                cardsToDistribute = 5;
+                break;
+            case 2:
+                cardsToDistribute = 4;
+                break;
+            case 3:
+                cardsToDistribute = 3;
+                break;
+            default:
+                // その他の場合に対処するか、デフォルトの値を提供する
+                console.log("サポートされていないユーザー数");
+                return;
+        }
+
+        // デッキをシャッフルする（シャッフル関数があると仮定）
+        shuffle(deck);
+
+        // ユーザーにカードを配布する
+        for (let i = 0; i < rooms[roomId].users.length; i++) {
+            // 各ユーザーに 'cardsToDistribute' 枚のカードを配布する
+            const distributedCards = deck.splice(0, cardsToDistribute);
+            rooms[roomId].users[i].hands = distributedCards;
+        }
+
+        console.log('カード配布開始');
+
+        io.to(roomId).emit("gameStarted", rooms[roomId]);
+        io.to(roomId).emit("handsDistribution", rooms[roomId]);
+    }
+  })
 });
 
 
@@ -170,6 +221,14 @@ const leaveRoom = (socket: Socket) => {
     } else {
       console.log(`ルーム ${user.roomId} は存在しません。`);
     }
+  }
+}
+
+// デッキのシャッフル関数（フィッシャー・イェーツのアルゴリズム）
+function shuffle(array: Deck) {
+  for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
   }
 }
 

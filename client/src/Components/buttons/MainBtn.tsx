@@ -1,13 +1,26 @@
 import React, { useState }from 'react';
 import { Box, Button, Text} from '@chakra-ui/react';
-import { BtnProps } from "../types/types";
-import { mainColor, subColor } from '../constants/cssConstants';
+import { BtnProps } from "../../types/types";
+import { mainColor, subColor } from '../../constants/cssConstants';
 
 const MainBtn:React.FC<BtnProps> = ( props ) => {
   const { w, maxW, onClick, icon, mt, mb, ml, mr} = props;
 
   return (
-    <Button onClick={onClick} w={w || "22rem"} maxW="maxW" size="lg" borderRadius="30px" bg="rgb(255, 255, 255)" mt={mt} mb={mb} ml={ml} mr={mr} fontSize="15px">
+    <Button 
+      onClick={onClick} 
+      w={w || "22rem"} 
+      maxW="maxW" 
+      size="lg" 
+      borderRadius="30px" 
+      bg="rgb(255, 255, 255)" 
+      mt={mt} 
+      mb=
+      {mb} 
+      ml={ml} 
+      mr={mr} 
+      fontSize="15px"
+    >
       {icon === "ok" ? (
       <Box 
         w="2.1rem" 

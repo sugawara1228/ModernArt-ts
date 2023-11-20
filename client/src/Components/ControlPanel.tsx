@@ -11,7 +11,8 @@ import {
     SliderMark,
 } from '@chakra-ui/react';
 import { mainColor, subColor } from '../constants/cssConstants';
-import MainBtn from './MainBtn';
+import MainBtn from './buttons/MainBtn';
+import PlayBtn from './buttons/PlayBtn';
 
 const ControlPanel:React.FC= () => {
     const [sliderValue, setSliderValue] = useState<number>(1000);
@@ -68,15 +69,24 @@ const ControlPanel:React.FC= () => {
   
 
   return (
-        <Flex w="80%" h="20%" bg={mainColor} justify="center" align="center" borderRadius="8px"> 
-            <MainBtn w="15%" maxW="11rem" mr="1rem">
+        <Flex 
+        w="80%" 
+        h="20%" 
+        bg={mainColor} 
+        justify="center" 
+        align="center" 
+        borderRadius="8px" 
+        border="2px solid rgba(255, 255, 255, 0.4)"
+        
+        > 
+            <PlayBtn w="15%" maxW="11rem" mr="1rem" >
                 パス
-            </MainBtn>
-            <MainBtn w="22%"  maxW="16rem" mr="2rem">
+            </PlayBtn>
+            <PlayBtn w="22%"  maxW="16rem" mr="2rem">
                 入札する
-            </MainBtn>
+            </PlayBtn>
             <Flex flexDirection="column" justify="center" align="center">
-                <Flex w="8rem" h="2.5rem" mx="auto" justify="center" align="center" border="1px solid #FFDCAD" borderRadius="4px">
+                <Flex w="8rem" h="2.5rem" mx="auto" justify="center" align="center" border="1px solid #FFDCAD" borderRadius="4px" mb="3">
                     <Text fontSize="20px" color={subColor}>
                         ${formatNumberWithCommas(sliderValue)}
                     </Text>

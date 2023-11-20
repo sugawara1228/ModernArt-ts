@@ -21,9 +21,21 @@ const YourInfo:React.FC<YourInfoProps> = ( props ) => {
         <>
         {users.map((user, index) => (
             user.userId === socket.id ? (
-                <Flex w="50%" h="100%" maxH="10rem" bg={mainColor} borderRadius="8px" mb="1rem" color={subColor} justify="center" align="center" key={index} >
+                <Flex 
+                    w="50%" 
+                    h="100%" 
+                    maxH="10rem" 
+                    bg={mainColor} 
+                    borderRadius="8px" 
+                    mb="1rem" 
+                    color={subColor} 
+                    justify="center" 
+                    align="center" 
+                    key={index} 
+                    border="2px solid rgba(255, 255, 255, 0.4)"
+                >
                     <Flex w="50%" h="100%" justify="center" align="center" flexDirection="column">
-                        <Text as="b" key={user.userId} color={subColor} mb=".5rem" borderRadius="4px">
+                        <Text as="b" key={user.userId} fontSize="20px" color={subColor} mb=".5rem" borderRadius="4px">
                             {user.name}
                         </Text>
                         <Flex w="80%" h="3rem" justify="center" align="center" bg="white" color={mainColor} borderRadius="8px">

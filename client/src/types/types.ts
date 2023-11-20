@@ -4,6 +4,7 @@ export type Rooms = {
 
 export type RoomObj = {
     users: UserObj[];
+    isGameStart: boolean;
     turnIndex: number;
 }
 
@@ -15,33 +16,19 @@ export type UserObj = {
     userId: string;
     roomId: string;
     name: string;
+    isHost: boolean;
     hands: Card[];
 }
 
-export type Card = {
-    cardId: number;
-    cardType: string,
-    cardName: string,
-    cardEffect: string,
-    cardImgUrl: string
-}
+export type Deck = Array<Card>;
 
-export const Deck = [
-    {
-        cardId: 1,
-        cardType: "Gogh",
-        cardName: "Sunflower",
-        cardEffect: "double",
-        cardImgUrl: "./img"
-    },
-    {
-        cardId: 2,
-        cardType: "Gogh",
-        cardName: "Sunflower",
-        cardEffect: "double",
-        cardImgUrl: "./img"
-    },
-];
+export type Card = {
+    id: string;
+    type: string;
+    name: string;
+    effect: string;
+    url: string;
+}
 
 // コンポーネントProps
 export type GboxProps = {
@@ -55,6 +42,7 @@ export type GboxProps = {
 export type BtnProps = {
     w?: string;
     maxW?: string;
+    bg?: string;
     onClick?: (event: React.MouseEvent<HTMLElement>) => void;
     icon?: string;
     mt?: string;
@@ -67,15 +55,6 @@ export type BtnProps = {
 export type HeaderProps = {
     joinedUsers: number;
 }
-
-// export type ChatAreaProps = {
-//     roomId: string;
-//     messageList: string[];
-//     setMessage: React.Dispatch<React.SetStateAction<string>>;
-//     inputRef: React.MutableRefObject<HTMLInputElement | null>;
-//     chatAreaRef: React.MutableRefObject<HTMLInputElement | null>;
-//     message: string;
-// }
 
 export type UserInfoProps = {
     users: UserObj[];
@@ -93,10 +72,3 @@ export type JoinRoomProps = {
     setUserName: (e: string) => void;
 }
 
-// export type ControlPanelProps = {
-//     onChange: (e: number) => void;
-//     sliderValue: number;
-//     minusButtonClick: () => void;
-//     plusButtonClick: () => void;
-//     handleStop: () => void;
-// }

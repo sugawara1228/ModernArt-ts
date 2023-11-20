@@ -21,7 +21,7 @@ import { Socket } from 'socket.io-client';
 import { SocketContext } from '../index';
 import { useNavigate } from 'react-router-dom';
 import { mainColor } from '../constants/cssConstants';
-import MainBtn from './MainBtn';
+import MainBtn from './buttons/MainBtn';
 
 const HeaderContent:React.FC<HeaderProps> = ( props ) => {
   const { joinedUsers} = props;
