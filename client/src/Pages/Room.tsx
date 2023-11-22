@@ -48,6 +48,12 @@ const Room: React.FC = () => {
             setJoinedUsers(room.users.length);
         };
 
+        // 定員オーバー通知時処理
+        const capacityOverHandler = () => {
+            setNameError('このルームは定員に達しています');
+        }
+
+        // サーバーからのゲームスタート通知時処理
         const gameStartedHandler = (room: RoomObj) => {
             setIsGameStart(true);
         }
@@ -55,11 +61,13 @@ const Room: React.FC = () => {
         // リスナーを登録
         socket.on('roomJoined', roomJoinedHandler);
         socket.on('leaveRoom', leaveRoomHandler);
+        socket.on('capacityOver', capacityOverHandler);
         socket.on('gameStarted', gameStartedHandler);
 
         return () => {
             socket.off('roomJoined', roomJoinedHandler);
             socket.off('leaveRoom', leaveRoomHandler);
+            socket.off('capacityOver', capacityOverHandler);
             socket.off('gameStarted', gameStartedHandler);
         };
 
@@ -117,16 +125,16 @@ const Room: React.FC = () => {
                     </Flex>
                     {/** Mainエリア */}
                     <Flex h="100%" w="67%" justify="center" align="center" flexDirection="column">
-                        <GameMainDisp/>
-                            <Flex w="80%" h="20%" justify="center" align="center">
-                                { isGameStart ? (
-                                <MyhandArea />
-                                ) : null }
-                                <YourInfo users={users}/>
-                            </Flex>
+                        <GameMainDisp users={users} />
+                        <Flex w="80%" h="20%" justify="center" align="center">
                             { isGameStart ? (
-                            <ControlPanel />
+                            <MyhandArea />
                             ) : null }
+                            <YourInfo users={users}/>
+                        </Flex>
+                        { isGameStart ? (
+                        <ControlPanel users={users} />
+                        ) : null }
                     </Flex>
                     {/** Chat&Price情報エリア */}
                     <Flex h="100%" w="20%" justify="center" align="center" flexDirection="column">

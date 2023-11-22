@@ -42,13 +42,22 @@ io.on("connection", (socket: Socket) => {
       isHost: true,
       name: userName,
       hands: [],
+      haveCardType: {
+        gogh: 0,
+        Picasso: 0,
+        Munch: 0,
+        Vermeer: 0,
+        daVinci: 0,
+      },
+      money: 100000,
     }
 
     // ルーム情報
     rooms[roomId] = {
       users: [users[socket.id]],
       isGameStart: false,
-      turnIndex: 0
+      turnIndex: 0,
+      round: 0,
     };
 
     console.log(rooms[roomId].users);
@@ -65,6 +74,12 @@ io.on("connection", (socket: Socket) => {
   /** ルーム入室処理 */
   socket.on("joinRoom", (roomId: string, userName: string) => {
 
+    // 既に定員に達していたら入室を拒否する
+    if(rooms[roomId].users.length >= 5) {
+      socket.emit('capacityOver');
+      return;
+    }
+
     // 以前作成・入室したルームが残っている場合は先に削除する
     const oldUserData: UserObj | undefined = users[socket.id];
     if(oldUserData) {
@@ -80,6 +95,14 @@ io.on("connection", (socket: Socket) => {
       roomId: roomId,
       name: userName,
       hands: [],
+      haveCardType: {
+        gogh: 0,
+        Picasso: 0,
+        Munch: 0,
+        Vermeer: 0,
+        daVinci: 0,
+      },
+      money: 100000,
     }
 
     // ルーム情報追加
@@ -158,7 +181,7 @@ io.on("connection", (socket: Socket) => {
                 return;
         }
 
-        // デッキをシャッフルする（シャッフル関数があると仮定）
+        // デッキをシャッフルする
         shuffle(deck);
 
         // ユーザーにカードを配布する
@@ -170,8 +193,13 @@ io.on("connection", (socket: Socket) => {
 
         console.log('カード配布開始');
 
+        // ルーム内にgameStartの通知
         io.to(roomId).emit("gameStarted", rooms[roomId]);
-        io.to(roomId).emit("handsDistribution", rooms[roomId]);
+        // gameStartedによって手札エリアがマウントされるため、setTimeoutでマウントされるまで遅延させる
+        setTimeout(() => {
+          io.to(roomId).emit("handsDistribution", rooms[roomId]);
+        },500);
+        
     }
   })
 });
@@ -224,7 +252,7 @@ const leaveRoom = (socket: Socket) => {
   }
 }
 
-// デッキのシャッフル関数（フィッシャー・イェーツのアルゴリズム）
+// シャッフル関数
 function shuffle(array: Deck) {
   for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));

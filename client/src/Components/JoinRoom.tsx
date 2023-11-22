@@ -33,16 +33,15 @@ const JoinRoom: React.FC<JoinRoomProps> = (props) => {
             borderRadius="30px"
             h="2.8rem"
         />
-        <Text color="red.500" textAlign="left" w="22rem" mt="1" fontSize="sm">  
+        <Text as="b" color="yellow.300" textAlign="left" w="22rem" mt="1" fontSize="sm">  
             {nameError && 
-            <Text mt="1">
+            <Text mt="5" bg="rgba(255, 255, 255, 0.1)" borderRadius="10px" pt="2" pb="1" px="2">
                 <span className="material-symbols-outlined md-18">
                     cancel
                 </span>
                 <Box as="span" verticalAlign="top" ml="1">
                 {nameError}
                 </Box>
-                
             </Text>
             }
         </Text>

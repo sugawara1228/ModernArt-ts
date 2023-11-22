@@ -4,7 +4,7 @@ const theme = extendTheme({
   styles: {
     global: {
       body: {
-        backgroundImage: 'url("/img/AdobeStock_625890170.jpeg")',
+        backgroundImage: 'url("/img/main_bg.jpeg")',
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",

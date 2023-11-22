@@ -27,7 +27,6 @@ const MyhandArea:React.FC = () => {
                 setHands(myUserObj.hands);
                 console.log(`myUserObj.hands: ${myUserObj.hands}`);
             }
-            
         }
 
         // リスナーを登録
@@ -47,7 +46,12 @@ const MyhandArea:React.FC = () => {
                         h="auto"
                         src={`${card.url}`}
                         alt="card"
-                        style={{ position: 'absolute', top: 0 ,left: `${index * 40}px` }}
+                        position='absolute'
+                        top="0"
+                        left={`${index * 40}px`}
+                        object-fit="cover"
+                        transition="transform 0.3s ease"
+                        _hover={{transform: "scale(1.02)"}}
                     />
             ))}
         </Flex>

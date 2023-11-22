@@ -62,7 +62,7 @@ export const deck: Deck = [
             type: "gogh",
             name: "Sad old man",
             effect: "oneVoice",
-            url: "/img/cards/gogh/1_9_Old",
+            url: "/img/cards/gogh/1_9_Old.png",
         },
         {
             id: "1_10",

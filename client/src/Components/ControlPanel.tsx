@@ -1,4 +1,4 @@
-import React, { useState, useRef }from 'react';
+import React, { useState, useRef, useContext }from 'react';
 import { 
     Flex,
     Box,
@@ -13,8 +13,13 @@ import {
 import { mainColor, subColor } from '../constants/cssConstants';
 import MainBtn from './buttons/MainBtn';
 import PlayBtn from './buttons/PlayBtn';
+import { ControlPanelProps, UserObj } from '../types/types';
+import { Socket } from 'socket.io-client';
+import { SocketContext } from '../index';
 
-const ControlPanel:React.FC= () => {
+const ControlPanel: React.FC<ControlPanelProps>= ( props ) => {
+    const socket: Socket = useContext(SocketContext);
+    const { users } = props;
     const [sliderValue, setSliderValue] = useState<number>(1000);
 
      /** スライダーでの金額の取得 */

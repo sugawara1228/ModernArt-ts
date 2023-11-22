@@ -21,7 +21,6 @@ const ChatArea:React.FC = () => {
     const chatAreaRef = useRef<HTMLInputElement | null>(null);
 
     useEffect(() => {
-
         // サーバーからのメッセージ受信時処理
         const messageReceivedHandler = (sendName: string, message: string) => {
             console.log('Received message:', sendName, message);

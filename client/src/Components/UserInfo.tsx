@@ -12,7 +12,7 @@ import { UserInfoProps } from "../types/types";
 import { mainColor, subColor, color_d, color_g, color_m, color_p, color_v } from '../constants/cssConstants';
 
 
-/** ユーザー情報（他人）エリア　コンポーネント */
+/** ユーザー情報（自分以外）エリア　コンポーネント */
 const UserInfo:React.FC<UserInfoProps> = ( props ) => {
     const { users } = props;
     const socket: Socket = useContext(SocketContext);
@@ -39,26 +39,26 @@ const UserInfo:React.FC<UserInfoProps> = ( props ) => {
                             {user.name}
                         </Text>
                         <Flex justify="center" align="center" mt=".5rem">
-                            <Box as="span" display="inline-block" w="2rem" h="2rem" bg={color_g} borderRadius="3px" mr="0.5rem">
-
-                            </Box>
-                            <Box as="span" display="inline-block" w="2rem" h="2rem" bg={color_p} borderRadius="3px" mr="0.5rem">
-
-                            </Box>
-                            <Box as="span" display="inline-block" w="2rem" h="2rem" bg={color_m} borderRadius="3px" mr="0.5rem">
-
-                            </Box>
+                            <Flex w="2rem" h="2rem" bg={color_g} color={mainColor} justify="center" align="center" borderRadius="3px" mr="0.5rem">
+                                {user.haveCardType.gogh}
+                            </Flex>
+                            <Flex w="2rem" h="2rem" bg={color_p} color={mainColor} justify="center" align="center" borderRadius="3px" mr="0.5rem">
+                                {user.haveCardType.Picasso}
+                            </Flex>
+                            <Flex w="2rem" h="2rem" bg={color_m} color={mainColor} justify="center" align="center" borderRadius="3px" mr="0.5rem">
+                                {user.haveCardType.Munch}
+                            </Flex>
                         </Flex>
                         <Flex justify="center" align="center" mt=".5rem">
-                            <Box as="span" display="inline-block" w="2rem" h="2rem" bg={color_v} borderRadius="3px" mr="0.5rem">
-
-                            </Box>
-                            <Box as="span" display="inline-block" w="2rem" h="2rem" bg={color_d} borderRadius="3px" mr="0.5rem">
-
-                            </Box>
-                            <Box as="span" display="inline-block" w="2rem" h="2rem" bg="gray" borderRadius="3px" mr="0.5rem">
-
-                            </Box>
+                            <Flex w="2rem" h="2rem" bg={color_v} color={mainColor} justify="center" align="center" borderRadius="3px" mr="0.5rem">
+                                {user.haveCardType.Vermeer}
+                            </Flex>
+                            <Flex w="2rem" h="2rem" bg={color_d} color={mainColor} justify="center" align="center" borderRadius="3px" mr="0.5rem">
+                                {user.haveCardType.daVinci}
+                            </Flex>
+                            <Flex w="2rem" h="2rem" bg="gray" color={mainColor} justify="center" align="center" borderRadius="3px" mr="0.5rem">
+                                {user.hands.length}
+                            </Flex>
                         </Flex>
                     </Flex>
                 </Flex>

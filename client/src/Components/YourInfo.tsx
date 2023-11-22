@@ -10,12 +10,29 @@ import { Socket } from 'socket.io-client';
 import { SocketContext } from '../index';
 import { YourInfoProps } from "../types/types";
 import { mainColor, subColor, color_d, color_g, color_m, color_p, color_v } from '../constants/cssConstants';
+import { UserObj } from '../types/types';
 
 
 /** ユーザー情報（自分）エリア　コンポーネント */
 const YourInfo:React.FC<YourInfoProps> = ( props ) => {
     const { users } = props;
     const socket: Socket = useContext(SocketContext);
+    const myUserObj: UserObj | undefined = users.find((user) => user.userId === socket.id);
+    if (!myUserObj) {
+        throw new Error("myUserObj not found"); 
+    }
+    const [ currentMoney, setCurrentMoney ] = useState<number>(myUserObj.money);
+
+    useEffect(() => {
+        setCurrentMoney(myUserObj.money);
+    }, [users]);
+
+    // カンマを挿入する関数
+    const formatNumberWithCommas = (number: number) => {
+        if(number) {
+            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+    };
 
     return (
         <>
@@ -39,31 +56,28 @@ const YourInfo:React.FC<YourInfoProps> = ( props ) => {
                             {user.name}
                         </Text>
                         <Flex w="80%" h="3rem" justify="center" align="center" bg="white" color={mainColor} borderRadius="8px">
-                            <Text as="b" fontSize="21px">$100,000</Text>
+                            <Text as="b" fontSize="21px">${formatNumberWithCommas(currentMoney)}</Text>
                         </Flex>
                     </Flex>
                     <Flex w="50%" h="100%" justify="center" align="center" flexDirection="column">
                         <Flex justify="center" align="center" mt=".5rem">
-                            <Box as="span" display="inline-block" w="2.4rem" h="2.4rem" bg={color_g} borderRadius="3px" mr="0.5rem">
-
-                            </Box>
-                            <Box as="span" display="inline-block" w="2.4rem" h="2.4rem" bg={color_p} borderRadius="3px" mr="0.5rem">
-
-                            </Box>
-                            <Box as="span" display="inline-block" w="2.4rem" h="2.4rem" bg={color_m} borderRadius="3px" mr="0.5rem">
-
-                            </Box>
+                            <Flex w="2.4rem" h="2.4rem" bg={color_g} color={mainColor} justify="center" align="center" borderRadius="3px" mr="0.5rem">
+                                {user.haveCardType.gogh}
+                            </Flex>
+                            <Flex w="2.4rem" h="2.4rem" bg={color_p} color={mainColor} justify="center" align="center" borderRadius="3px" mr="0.5rem">
+                                {user.haveCardType.Picasso}
+                            </Flex>
+                            <Flex w="2.4rem" h="2.4rem" bg={color_m} color={mainColor} justify="center" align="center" borderRadius="3px" mr="0.5rem">
+                                {user.haveCardType.Munch}
+                            </Flex>
                         </Flex>
                         <Flex justify="center" align="center" mt=".5rem">
-                            <Box as="span" display="inline-block" w="2.4rem" h="2.4rem" bg={color_v} borderRadius="3px" mr="0.5rem">
-
-                            </Box>
-                            <Box as="span" display="inline-block" w="2.4rem" h="2.4rem" bg={color_d} borderRadius="3px" mr="0.5rem">
-
-                            </Box>
-                            <Box as="span" display="inline-block" w="2.4rem" h="2.4rem" bg="gray" borderRadius="3px" mr="0.5rem">
-
-                            </Box>
+                            <Flex w="2.4rem" h="2.4rem" bg={color_v} color={mainColor} justify="center" align="center" borderRadius="3px" mr="0.5rem">
+                                {user.haveCardType.Vermeer}
+                            </Flex>
+                            <Flex w="2.4rem" h="2.4rem" bg={color_d} color={mainColor} justify="center" align="center" borderRadius="3px" mr="0.5rem">
+                                {user.haveCardType.daVinci}
+                            </Flex>  
                         </Flex>
                     </Flex>
                 </Flex>

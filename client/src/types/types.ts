@@ -6,6 +6,7 @@ export type RoomObj = {
     users: UserObj[];
     isGameStart: boolean;
     turnIndex: number;
+    round: number;
 }
 
 export type Users = {
@@ -18,6 +19,14 @@ export type UserObj = {
     name: string;
     isHost: boolean;
     hands: Card[];
+    haveCardType: {
+        gogh: number;
+        Picasso: number;
+        Munch: number;
+        Vermeer: number;
+        daVinci: number;
+    };
+    money: number;
 }
 
 export type Deck = Array<Card>;
@@ -29,6 +38,7 @@ export type Card = {
     effect: string;
     url: string;
 }
+
 
 // コンポーネントProps
 export type GboxProps = {
@@ -70,5 +80,13 @@ export type JoinRoomProps = {
     createRoom?: () => void;
     joinRoom?: () => void;
     setUserName: (e: string) => void;
+}
+
+export type ControlPanelProps = {
+    users: UserObj[];
+}
+
+export type GameMainDispProps = {
+    users: UserObj[];
 }
 
