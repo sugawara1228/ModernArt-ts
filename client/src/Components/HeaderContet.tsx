@@ -47,11 +47,16 @@ const HeaderContent:React.FC<HeaderProps> = ( props ) => {
 
   return (
     <Flex height="10%" justify="space-between" align="center" w="100%" p="5">
-        <Button onClick={addModal.onOpen} bg="rgba(255, 255, 255, 0.95)" borderRadius="30px" w="10%"
-        size="lg">
-            <Text as="span" color={mainColor}>
+        <Button 
+            onClick={addModal.onOpen} 
+            bg="rgba(255, 255, 255, 0.95)"
+            borderRadius="30px" 
+            size="md"
+            w="8rem"
+        >
+            <Text as="span" color={mainColor} fontSize="15px">
             招待
-            <Text as="span" className="material-symbols-outlined" verticalAlign="bottom">
+            <Text as="span" className="material-symbols-outlined md-14" verticalAlign="bottom">
                 person
             </Text>
             {joinedUsers}
@@ -90,7 +95,7 @@ const HeaderContent:React.FC<HeaderProps> = ( props ) => {
             </AlertDialogOverlay>
         </AlertDialog>
 
-        <MainBtn onClick={leaveModal.onOpen} icon="logout" w="12rem">
+        <MainBtn onClick={leaveModal.onOpen} icon="logout" size="md" w="10%">
             ルーム退出
         </MainBtn>
         

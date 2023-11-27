@@ -10,7 +10,7 @@ const theme = extendTheme({
         backgroundRepeat: "no-repeat",
         width: "100vw",
         height: "100vh",
-        fontSize: "16px",
+        fontSize: "14px",
       },
       html: {
        height: '100%',

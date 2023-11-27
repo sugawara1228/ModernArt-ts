@@ -4,17 +4,15 @@ import { Socket } from 'socket.io-client';
 import { SocketContext } from '../index';
 import { userNameValidation } from '../utility/validation';
 import { RoomObj, UserObj } from '../types/types';
-import Loading from '../Components/Loading';
+import Loading from '../Components/parts/Loading';
 import HeaderContent from '../Components/HeaderContet';
 import ChatArea from '../Components/ChatArea';
 import SellingPrice from '../Components/SellingPrice';
 import UserInfo from '../Components/UserInfo';
 import { subColor } from '../constants/cssConstants';
 import JoinRoom from '../Components/JoinRoom';
-import ControlPanel from '../Components/ControlPanel';
-import YourInfo from '../Components/YourInfo';
 import GameMainDisp from '../Components/GameMainDisp';
-import MyhandArea from '../Components/MyHandArea';
+
 
 const Room: React.FC = () => {
   const socket: Socket = useContext(SocketContext);
@@ -25,7 +23,6 @@ const Room: React.FC = () => {
   const [joinFlg, setJoinFlg] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isDisconnect, setIsDisconnect] = useState<boolean>(false);
-  const [ isGameStart, setIsGameStart ] = useState<boolean>(false);
   const blockBrowserBack = useCallback(() => {
     window.history.go(1)
   }, []);
@@ -53,22 +50,15 @@ const Room: React.FC = () => {
             setNameError('このルームは定員に達しています');
         }
 
-        // サーバーからのゲームスタート通知時処理
-        const gameStartedHandler = (room: RoomObj) => {
-            setIsGameStart(true);
-        }
-
         // リスナーを登録
         socket.on('roomJoined', roomJoinedHandler);
         socket.on('leaveRoom', leaveRoomHandler);
         socket.on('capacityOver', capacityOverHandler);
-        socket.on('gameStarted', gameStartedHandler);
 
         return () => {
             socket.off('roomJoined', roomJoinedHandler);
             socket.off('leaveRoom', leaveRoomHandler);
             socket.off('capacityOver', capacityOverHandler);
-            socket.off('gameStarted', gameStartedHandler);
         };
 
     },[]);  
@@ -124,17 +114,10 @@ const Room: React.FC = () => {
                         <UserInfo users={users}/>
                     </Flex>
                     {/** Mainエリア */}
-                    <Flex h="100%" w="67%" justify="center" align="center" flexDirection="column">
-                        <GameMainDisp users={users} />
-                        <Flex w="80%" h="20%" justify="center" align="center">
-                            { isGameStart ? (
-                            <MyhandArea />
-                            ) : null }
-                            <YourInfo users={users}/>
-                        </Flex>
-                        { isGameStart ? (
-                        <ControlPanel users={users} />
-                        ) : null }
+                    <Flex h="100%" w="67%" justify="center" align="center">
+                        <GameMainDisp 
+                            users={users} 
+                        />
                     </Flex>
                     {/** Chat&Price情報エリア */}
                     <Flex h="100%" w="20%" justify="center" align="center" flexDirection="column">

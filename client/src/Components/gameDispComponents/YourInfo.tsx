@@ -7,10 +7,10 @@ import {
     Box
 } from '@chakra-ui/react';
 import { Socket } from 'socket.io-client';
-import { SocketContext } from '../index';
-import { YourInfoProps } from "../types/types";
-import { mainColor, subColor, color_d, color_g, color_m, color_p, color_v } from '../constants/cssConstants';
-import { UserObj } from '../types/types';
+import { SocketContext } from '../../index';
+import { YourInfoProps } from "../../types/types";
+import { mainColor, subColor, color_d, color_g, color_m, color_p, color_v } from '../../constants/cssConstants';
+import { UserObj } from '../../types/types';
 
 
 /** ユーザー情報（自分）エリア　コンポーネント */
@@ -52,7 +52,7 @@ const YourInfo:React.FC<YourInfoProps> = ( props ) => {
                     border="2px solid rgba(255, 255, 255, 0.4)"
                 >
                     <Flex w="50%" h="100%" justify="center" align="center" flexDirection="column">
-                        <Text as="b" key={user.userId} fontSize="20px" color={subColor} mb=".5rem" borderRadius="4px">
+                        <Text as="b" key={user.userId} fontSize="16px" color={subColor} mb=".5rem" borderRadius="4px">
                             {user.name}
                         </Text>
                         <Flex w="80%" h="3rem" justify="center" align="center" bg="white" color={mainColor} borderRadius="8px">

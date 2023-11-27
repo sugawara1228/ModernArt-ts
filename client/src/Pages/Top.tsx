@@ -2,7 +2,7 @@ import React, { useState, useEffect, } from 'react';
 import { Flex, Box, Heading, Text, Center, Image } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import MainBtn from '../Components/buttons/MainBtn';
-import Loading from '../Components/Loading';
+import Loading from '../Components/parts/Loading';
 
 
 const Top: React.FC = () => {

@@ -154,8 +154,10 @@ io.on("connection", (socket: Socket) => {
   /** ゲーム開始ボタン押下処理 */
   socket.on('gameStart', () => {
     console.log('ゲームスタートボタン押下');
+
     // メッセージの送信元のsocket.idから、ユーザー情報を取得
     const user: UserObj | undefined = users[socket.id];
+    const playDeck: Deck = [...deck];
 
     if(user) {
         // ユーザ情報から、今いるルームidを取得
@@ -182,13 +184,14 @@ io.on("connection", (socket: Socket) => {
         }
 
         // デッキをシャッフルする
-        shuffle(deck);
+        shuffle(playDeck);
 
         // ユーザーにカードを配布する
         for (let i = 0; i < rooms[roomId].users.length; i++) {
             // 各ユーザーに 'cardsToDistribute' 枚のカードを配布する
-            const distributedCards = deck.splice(0, cardsToDistribute);
+            const distributedCards = playDeck.splice(0, cardsToDistribute);
             rooms[roomId].users[i].hands = distributedCards;
+            console.log(`${rooms[roomId].users[i].name}のハンド${rooms[roomId].users[i].hands}`);
         }
 
         console.log('カード配布開始');
@@ -198,12 +201,11 @@ io.on("connection", (socket: Socket) => {
         // gameStartedによって手札エリアがマウントされるため、setTimeoutでマウントされるまで遅延させる
         setTimeout(() => {
           io.to(roomId).emit("handsDistribution", rooms[roomId]);
-        },500);
+        },800);
         
     }
   })
 });
-
 
 /** 
  * ルーム退出処理  

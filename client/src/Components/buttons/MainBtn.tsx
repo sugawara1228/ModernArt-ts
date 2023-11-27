@@ -4,14 +4,14 @@ import { BtnProps } from "../../types/types";
 import { mainColor, subColor } from '../../constants/cssConstants';
 
 const MainBtn:React.FC<BtnProps> = ( props ) => {
-  const { w, maxW, onClick, icon, mt, mb, ml, mr} = props;
+  const { w, maxW, onClick, size, icon, mt, mb, ml, mr, isDisabled, } = props;
 
   return (
     <Button 
       onClick={onClick} 
       w={w || "22rem"} 
       maxW="maxW" 
-      size="lg" 
+      size={size || "lg"} 
       borderRadius="30px" 
       bg="rgb(255, 255, 255)" 
       mt={mt} 
@@ -20,6 +20,7 @@ const MainBtn:React.FC<BtnProps> = ( props ) => {
       ml={ml} 
       mr={mr} 
       fontSize="15px"
+      isDisabled={isDisabled}
     >
       {icon === "ok" ? (
       <Box 

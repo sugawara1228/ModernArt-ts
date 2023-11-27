@@ -9,7 +9,7 @@ import {
     ListItem
 } from '@chakra-ui/react';
 import { mainColor, subColor, color_d, color_g, color_m, color_p, color_v } from '../constants/cssConstants';
-import Gbox from './GlassBox';
+import Gbox from './parts/GlassBox';
 
 /** 現在の売値　表示エリア */
 const SellingPrice:React.FC = ( ) => {

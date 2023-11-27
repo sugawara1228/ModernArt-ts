@@ -10,7 +10,7 @@ import { Socket } from 'socket.io-client';
 import { SocketContext } from '../index';
 import { mainColor, subColor } from '../constants/cssConstants';
 import { RoomObj, UserObj } from '../types/types';
-import Gbox from './GlassBox';
+import Gbox from './parts/GlassBox';
 
 /** チャットエリアコンポーネント */
 const ChatArea:React.FC = () => {

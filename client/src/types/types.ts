@@ -54,12 +54,14 @@ export type BtnProps = {
     maxW?: string;
     bg?: string;
     onClick?: (event: React.MouseEvent<HTMLElement>) => void;
+    size?: string;
     icon?: string;
     mt?: string;
     mb?: string;
     mr?: string;
     ml?: string;
     children?: React.ReactNode;
+    isDisabled?: boolean;
 }
 
 export type HeaderProps = {

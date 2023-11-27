@@ -9,12 +9,12 @@ import {
   Box,
   Spinner,
 } from '@chakra-ui/react';
-import Gbox from '../Components/GlassBox';
+import Gbox from '../Components/parts/GlassBox';
 import { Socket } from 'socket.io-client';
 import { useNavigate } from 'react-router-dom';
 import { SocketContext } from '../index';
 import { userNameValidation } from '../utility/validation';
-import Loading from '../Components/Loading';
+import Loading from '../Components/parts/Loading';
 import MainBtn from '../Components/buttons/MainBtn';
 import { mainColor, subColor } from '../constants/cssConstants';
 import JoinRoom from '../Components/JoinRoom';
